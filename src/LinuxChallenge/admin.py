@@ -1,5 +1,5 @@
 from django.contrib import admin
-from cms.models import User, Level, Question, Flag, Answer
+from LinuxChallenge.models import User, Level, Question, Flag, Answer
 
 
 class UserAdmin(admin.ModelAdmin):
