@@ -1,17 +1,13 @@
-from django.shortcuts import render
-from django.http.response import HttpResponse
+from django.views.generic import TemplateView
 
 
-def hello_world(request):
-    return HttpResponse('Hello_world')
+class IndexView(TemplateView):
+    template_name = 'index.html'
 
 
-def hello_template(request):
-    tsurai = {
-        'dame': 'いやよく見たらなんかむかつく',
-        'oaa': 'Python難しい.....難しくない....？',
-    }
-    return render(request, 'index.html', tsurai)
+class RankingView(TemplateView):
+    template_name = 'ranking.html'
+
 
 
 
