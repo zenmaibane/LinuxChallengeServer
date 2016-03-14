@@ -10,7 +10,7 @@ class User(models.Model):
 
 class Level(models.Model):
     """問題のレベル"""
-    level = models.IntegerField('レベル', max_length=1)
+    level = models.IntegerField('レベル')
 
 
 class Question(models.Model):
@@ -23,7 +23,7 @@ class Question(models.Model):
 class Flag(models.Model):
     """正解のフラグ"""
     flag = models.CharField('フラグ', max_length=255)
-    point = models.IntegerField('得点', max_length=3)
+    point = models.IntegerField('得点')
     question = models.ForeignKey(Question, verbose_name='問題')
 
 
