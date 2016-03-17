@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView, CreateView,DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -25,6 +26,8 @@ class AccountCreateView(CreateView):
     model = User
     form_class = UserCreationForm
 
+    def login_success(self):
+        return reverse(ChallengeView)
 
 # 単純に特定のデータを取り出すView = 個別のオブジェクトを取り出すView
 # であるので，DetailViewを利用すると可能．ので，継承してパラメータを変え利用する．

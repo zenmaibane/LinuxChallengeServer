@@ -1,19 +1,29 @@
 {% extends "base.html" %}
 
  {% block contents %}
-     <h1>
+     <h1 xmlns="http://www.w3.org/1999/html">
      \Linux/
      </h1>
      <p>
      初めてならサインアップしてそれ以降はLogin押すといいんじゃないですかね
      </p>
-     <a class="waves-effect waves-light btn">
-         Sign Up!
-     </a>
-     </br>
-     <a class="waves-effect waves-light btn">
-         Login
-     </a>
+{#     <a class="waves-effect waves-light btn">#}
+{#         Sign Up!#}
+{#     </a>#}
+{#     </br>#}
+{#     <a class="waves-effect waves-light btn">#}
+{#         Login#}
+{#     </a>#}
+     <div>
+     {% if form.errors %}
+         <p>Your username and password didn't match. Please try again.</p>
+     {% endif %}
+     </div>
+     <form>name<input type="text"> </br>
+         password<input type="password"></br>
+         password_again<input type="password"></br>
+     <input type="submit" value="create_account">
+     </form>
 {% endblock %}
 
 

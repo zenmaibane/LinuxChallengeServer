@@ -16,11 +16,12 @@ Including another URLconf
 from django.conf.urls import url, patterns, include
 from LinuxChallenge.views import IndexView, RankingView, ChallengeView, QuestionDetailView
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', IndexView.as_view()),
+    url(r'^$', auth_views.login),
     url(r'^ranking/', RankingView.as_view()),
     url(r'^challenge/', ChallengeView.as_view()),
     # ?P<何か>という書き方は，viewに対してurlについている数値を何と言う名前の変数に入れて渡せばいいのかを指定するもの．
