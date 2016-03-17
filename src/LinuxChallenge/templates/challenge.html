@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block contents %}
+    {#         レベルの数だけループ#}
+         {% for level in level_list %}
+         <table class="striped responsive-table">
+          <thead>
+          <tr>
+              <th>Title</th>
+              <th>Points</th>
+              <th>Solved</th>
+          </tr>
+          </thead>
+         <tbody>
+{#         各レベルの問題数だけループ#}
+         {% for challenge_per_level in level_list %}
+         <tr>
+             <td></td>
+             <td></td>
+             <td></td>
+         </tr>
+         {% endfor %}
+         </tbody>
+         </table>
+         {% endfor %}
+{% endblock %}

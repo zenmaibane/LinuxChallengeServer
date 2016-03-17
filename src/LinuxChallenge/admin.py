@@ -3,8 +3,8 @@ from LinuxChallenge.models import User, Level, Question, Flag, Answer
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('name', 'password', 'point',)
-    list_display_links = ('name', 'point',)
+    list_display = ('point',)
+    list_display_links = ('point',)
 admin.site.register(User, UserAdmin)
 
 

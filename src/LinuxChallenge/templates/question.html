@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block contents %}
+    <div class="body">
+        <h1>Q.{{ object.id }}. {{ object.title }}</h1>
+        <div class="sentence">
+            {{ object.sentence }}
+        </div>
+    </div>
+{% endblock %}

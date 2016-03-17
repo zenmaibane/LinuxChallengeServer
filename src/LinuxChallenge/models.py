@@ -1,10 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
-class User(models.Model):
+class User(AbstractUser):
     """ユーザ"""
-    name = models.CharField(max_length=31)
-    password = models.CharField('パスワード', max_length=127)
     point = models.IntegerField('合計点')
 
 
