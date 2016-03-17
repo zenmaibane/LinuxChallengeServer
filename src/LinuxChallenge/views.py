@@ -29,6 +29,8 @@ class AccountCreateView(CreateView):
     def login_success(self):
         return reverse(ChallengeView)
 
+class
+
 # 単純に特定のデータを取り出すView = 個別のオブジェクトを取り出すView
 # であるので，DetailViewを利用すると可能．ので，継承してパラメータを変え利用する．
 # http://docs.djangoproject.jp/en/latest/ref/class-based-views.html#detailview
