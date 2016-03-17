@@ -135,4 +135,6 @@ STATICFILES_FINDERS = (
      'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
+# LOGIN → REDIRECT_URL
+LOGIN_REDIRECT_URL = "/challenge"
 
