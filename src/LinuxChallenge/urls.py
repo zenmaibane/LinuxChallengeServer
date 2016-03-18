@@ -22,7 +22,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.login, name="Index"),
+    url(r'^$', AccountCreateView.as_view(), name="Index"),
     url(r'^ranking/', RankingView.as_view()),
     url(r'^challenge/', ChallengeView()),
     url(r'^signup/', AccountCreateView.as_view()),

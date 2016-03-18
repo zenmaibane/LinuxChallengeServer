@@ -27,6 +27,7 @@ class AuthView(LoginRequiredMixin, TemplateView):
 class AccountCreateView(CreateView):
     model = User
     form_class = SignUpForm
+    template_name = "index.html"
 
     def get_success_url(self):
         return reverse("Index")
