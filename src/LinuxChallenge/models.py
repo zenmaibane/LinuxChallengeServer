@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     """ユーザ"""
-    point = models.IntegerField('合計点')
+    point = models.IntegerField('合計点', blank=True, default=0)
 
 
 class Level(models.Model):

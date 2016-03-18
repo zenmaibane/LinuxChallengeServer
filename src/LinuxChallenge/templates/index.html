@@ -14,16 +14,23 @@
 {#     <a class="waves-effect waves-light btn">#}
 {#         Login#}
 {#     </a>#}
+     {% if object.id %}
+    <h1>Update User</h1>
+{% else %}
+    <h1>Create User</h1>
+{% endif %}
      <div>
-     {% if form.errors %}
-         <p>Your username and password didn't match. Please try again.</p>
-     {% endif %}
+{#     {% if form.errors %}#}
+{#         <p>Your username and password didn't match. Please try again.</p>#}
+{#     {% endif %}#}
      </div>
-     <form>name<input type="text"> </br>
-         password<input type="password"></br>
-         password_again<input type="password"></br>
-     <input type="submit" value="create_account">
-     </form>
+     <form method="post" action="signup">
+     <fieldset>
+     {% csrf_token %}
+         {{ form.as_p }}
+         <input type="submit" value="Create_User">
+         </fieldset>
+              </form>
 {% endblock %}
 
 

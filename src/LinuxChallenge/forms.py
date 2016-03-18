@@ -1,9 +1,13 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from LinuxChallenge.models import User as custamUser
 
 
-class SignUpForm(forms.Form):
-    username = forms.CharField(max_length=31)
-    password = forms.CharField(max_length=127)
-    password_again = forms.CharField(max_length=127)
+class SignUpForm(UserCreationForm):
+
+      class Meta(UserCreationForm.Meta):
+        model = custamUser
+
+
 
 
