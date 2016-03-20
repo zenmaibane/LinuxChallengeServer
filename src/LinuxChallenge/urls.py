@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, patterns, include
-
+from django.contrib.auth import views as aaa
 from LinuxChallenge import views
 from LinuxChallenge.views import IndexView, ChallengeView, RankingView, AccountCreateView, QuestionDetailView
 from django.contrib import admin
@@ -22,11 +22,11 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', AccountCreateView.as_view(), name="Index"),
+    url(r'^$', views.login, name="Index"),
+    url(r'^logout/', aaa.logout_then_login),
     url(r'^ranking/', RankingView.as_view()),
-    url(r'^challenge/', ChallengeView()),
     url(r'^signup/', AccountCreateView.as_view()),
-    url(r'^login/', views.login),
+    url(r'^challenge/', ChallengeView.as_view()),
     # ?P<何か>という書き方は，viewに対してurlについている数値を何と言う名前の変数に入れて渡せばいいのかを指定するもの．
     # 例えば，以下のようなURLにアクセスしたなら……
     #     http://picture-of.pro/questions/1

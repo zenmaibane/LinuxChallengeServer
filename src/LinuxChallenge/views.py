@@ -1,10 +1,9 @@
 from django.contrib.auth import views
 from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView, CreateView, DetailView
+from django.views.generic import TemplateView, CreateView, DetailView, ListView
 #from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from LinuxChallenge.models import User
-from LinuxChallenge.models import Question
+from LinuxChallenge.models import User, Question, Flag
 from LinuxChallenge.forms import SignUpForm
 
 
@@ -16,18 +15,20 @@ class RankingView(TemplateView):
     template_name = 'ranking.html'
 
 
-class ChallengeView(TemplateView):
+class ChallengeView(ListView):
     template_name = 'challenge.html'
+    model = Question
+    model2 = Flag
 
 
-class AuthView(LoginRequiredMixin, TemplateView):
-    login_url = '/'
+# class AuthView(LoginRequiredMixin, TemplateView):
+#     login_url = '/'
 
 
 class AccountCreateView(CreateView):
     model = User
     form_class = SignUpForm
-    template_name = "index.html"
+    template_name = "signup.html"
 
     def get_success_url(self):
         return reverse("Index")
@@ -51,6 +52,10 @@ class QuestionDetailView(DetailView):
 
 def login(request):
     return views.login(request=request, template_name='index.html', redirect_field_name="challenge.html")
+
+
+def logout_then_login(request):
+    return views.logout_then_login(request=request, next_page="index")
 
 """
 class HogoHogeView(mixin.SingleObjectMixin):

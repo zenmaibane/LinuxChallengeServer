@@ -2,25 +2,30 @@
 
 {% block contents %}
     {#         レベルの数だけループ#}
-         {% for level in level_list %}
+{#         {% for level in level_list %}#}
+
+
          <table class="striped responsive-table">
           <thead>
           <tr>
               <th>Title</th>
               <th>Points</th>
-              <th>Solved</th>
+{#              <th>Solved</th>#}
           </tr>
           </thead>
          <tbody>
 {#         各レベルの問題数だけループ#}
-         {% for challenge_per_level in level_list %}
+{#         {% for challenge_per_level in level_list %}#}
+{% for question in question_list %}
          <tr>
-             <td></td>
-             <td></td>
-             <td></td>
+             <td>{{ question.title }}</td>
+             <td>{{ question.level }}</td>
+{#             <td></td>#}
          </tr>
-         {% endfor %}
+{% endfor %}
+{#         {% endfor %}#}
          </tbody>
          </table>
-         {% endfor %}
+{#         {% endfor %}#}
+
 {% endblock %}
