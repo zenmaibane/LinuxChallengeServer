@@ -11,10 +11,12 @@ class IndexView(TemplateView):
     template_name = "index.html"
 
 
+#@login_required
 class RankingView(TemplateView):
     template_name = 'ranking.html'
 
 
+#@login_required
 class ChallengeView(ListView):
     template_name = 'challenge.html'
     model = Question
