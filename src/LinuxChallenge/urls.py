@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^$', views.login, name="Index"),
     url(r'^logout/', aaa.logout_then_login),
     url(r'^ranking/', RankingView.as_view()),
-    url(r'^signup/', AccountCreateView.as_view()),
+    url(r'^signup/', AccountCreateView.as_view(), name='signup'),
     url(r'^challenge/', login_required(ChallengeView.as_view())),
     # ?P<何か>という書き方は，viewに対してurlについている数値を何と言う名前の変数に入れて渡せばいいのかを指定するもの．
     # 例えば，以下のようなURLにアクセスしたなら……
