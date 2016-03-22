@@ -1,30 +1,36 @@
 from django.contrib.auth import views
 from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView, CreateView, DetailView, ListView
-#from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
-from LinuxChallenge.models import User, Question, Flag
+from django.views.generic import View, TemplateView, CreateView, DetailView, ListView
+from django.views.generic.base import TemplateResponseMixin
+# from django.contrib.auth.forms import UserCreationForm
+from LinuxChallenge.models import User, Question, Flag, Level
 from LinuxChallenge.forms import SignUpForm
+from django.shortcuts import render, render_to_response
 
 
 class IndexView(TemplateView):
     template_name = "index.html"
 
 
-#@login_required
 class RankingView(TemplateView):
     template_name = 'ranking.html'
 
 
-#@login_required
-class ChallengeView(ListView):
-    template_name = 'challenge.html'
-    model = Question
-    model2 = Flag
+# class ChallengeView(ListView):
+#     template_name = 'challenge.html'
+#     model = Flag
 
 
-# class AuthView(LoginRequiredMixin, TemplateView):
-#     login_url = '/'
+class ChallengeView(View):
+    def get(self, request):
+        # f = Flag.objects.all()
+        q = Question.objects.all()
+        questions_per_level = []
+        l = Level.objects.all()
+        for lev in l:
+            questions_per_level.append({"levels": lev, "questions": Question.objects.filter(level__stage__exact=lev.stage)})
+        return render(request=request, template_name="challenge.html",
+                      dictionary={"questions_per_lev": questions_per_level})
 
 
 class AccountCreateView(CreateView):
@@ -48,6 +54,8 @@ class QuestionDetailView(DetailView):
     # ちなみに，template内ではobjectという変数に検索結果が与えられるらしい．
     # http://shinriyo.hateblo.jp/entry/2015/02/28/Django%E3%81%AEDetailView%E3%81%AE%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88
     template_name = 'question.html'
+
+
 # object = Question.objects.get(id=pk)
 # render(template_name, object)
 
@@ -58,6 +66,7 @@ def login(request):
 
 def logout_then_login(request):
     return views.logout_then_login(request=request, next_page="index")
+
 
 """
 class HogoHogeView(mixin.SingleObjectMixin):

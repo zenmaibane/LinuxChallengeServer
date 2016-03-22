@@ -9,8 +9,8 @@ admin.site.register(User, UserAdmin)
 
 
 class LevelAdmin(admin.ModelAdmin):
-    list_display = ('level',)
-    list_display_links = ('level',)
+    list_display = ('stage',)
+    list_display_links = ('stage',)
 admin.site.register(Level, LevelAdmin)
 
 
