@@ -1,12 +1,11 @@
 from django.contrib.auth import views
 from django.core.urlresolvers import reverse
-from django.views.generic import View, TemplateView, CreateView, DetailView, ListView
-from django.views.generic.edit import FormMixin
-from django.http import HttpResponse
-# from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import View, TemplateView, CreateView, DetailView
 from LinuxChallenge.models import User, Question, Flag, Level, Answer
 from LinuxChallenge.forms import SignUpForm, FlagForm
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, render_to_response
+from django.core.exceptions import ObjectDoesNotExist
+
 
 
 class IndexView(TemplateView):
@@ -69,25 +68,29 @@ class AnswerView(View):
         if form.is_valid():
             user = request.user
             q_id = form.cleaned_data['q_id']
-            question = Question.objects.filter(id=q_id)
-            url = "question/" + q_id
+            ques = Question.objects.get(id=q_id)
             user_answer = form.cleaned_data['answer']
-            flag = Flag.objects.filter(question=question, flag=user_answer)
-            answer = Answer(user=user, question=question, user_answer=user_answer, flag=flag)
-            if flag is None:
+            try:
+                flag = Flag.objects.get(question=ques, correct_answer__exact=user_answer)
+                #flag = Flag.objects.get(Flag(question=ques),Flag(correct_answer=user_answer))
+                #flag = Flag.objects.filter(question=ques, correct_answer__exact=user_answer)
+            except Flag.DoesNotExist:
+                answer = Answer(user=user, question=ques, user_answer=user_answer, flag=None)
                 answer.save()
                 is_correct = False
-                return render(request=request, template_name=url,
+                return render(request=request, template_name="challenge.html",
                               dictionary={"is_correct": is_correct})
 
-            if flag and Answer.objects.filter(user=user, question=question, flag=flag).exists():
+            #回答の重複処理
+            if flag and Answer.objects.filter(user=user, question=ques, flag=flag).exists():
                 is_duplicate = True
-                return render(request=request, template_name=url,
+                return render(request=request, template_name="challenge.html",
                               dictionary={"is_duplicate": is_duplicate})
+            answer = Answer(user=user, question=ques, user_answer=user_answer, flag=flag)
             answer.save()
             is_correct = True
-            return render(request=request, template_name=url,
-                          dictionary={"is_correct": is_correct})
+            return render(request=request, template_name="challenge.html",
+                              dictionary={"is_correct": is_correct})
 
 
 def login(request):

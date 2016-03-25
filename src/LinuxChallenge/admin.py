@@ -21,8 +21,8 @@ admin.site.register(Question, QuestionAdmin)
 
 
 class FlagAdmin(admin.ModelAdmin):
-    list_display = ('flag', 'point', 'question',)
-    list_display_links = ('flag', 'point', 'question',)
+    list_display = ('correct_answer', 'point', 'question',)
+    list_display_links = ('correct_answer', 'point', 'question',)
 admin.site.register(Flag, FlagAdmin)
 
 

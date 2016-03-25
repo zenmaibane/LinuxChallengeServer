@@ -15,7 +15,7 @@ class Level(models.Model):
     stage = models.IntegerField('レベル')
 
     def __str__(self):
-        return self.stage
+        return str(self.stage)
 
 
 class Question(models.Model):
@@ -34,12 +34,12 @@ class Question(models.Model):
 
 class Flag(models.Model):
     """正解のフラグ"""
-    flag = models.CharField('フラグ', max_length=255, unique=True)
+    correct_answer = models.CharField('フラグ', max_length=255, unique=True)
     point = models.IntegerField('得点')
     question = models.ForeignKey(Question, verbose_name='問題')
 
     def __str__(self):
-        return self.flag
+        return self.correct_answer
 
 
 class Answer(models.Model):
