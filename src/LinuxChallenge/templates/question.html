@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block contents %}
-        <h1>Q.{{ object.id }}. {{ object.title }}</h1>
+        <h1>Q.{{ question.id }}. {{ question.title }}</h1>
         <div class="sentence">
-            {{ object.sentence }}
+            {{ question.sentence }}
         </div>
     <div class="message">
     {% if is_correct == None %}
@@ -12,16 +12,15 @@
         {% elif not is_correct %}
         <p>That's incorrect.</p>
     {% endif %}
-
     {% if is_duplicate %}
     <p>duplicate</p>
     {% endif %}
     </div>
-    <form method="post" action="/answer">
+    <form method="post" action="/answer/">
     <fieldset>
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="hidden" value="{{ object.id }}" name="q_id">
+{#        <input type="hidden" value="{{ object.id }}" name="q_id">#}
         <input class="waves-effect waves-light btn" type="submit" value="submit">
     </fieldset>
     </form>

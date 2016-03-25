@@ -34,7 +34,7 @@ urlpatterns = [
     # ちなみに，DetailViewでは，pkという変数にPrimaryKeyになる値（Djangoではidですが……）を代入するように書くと
     # 自動で検索して，objectをセットしてくれます．
     url(r'^questions/(?P<pk>\d+)$', login_required(QuestionDetailView.as_view()), name="question"),
-    url(r'^questions/(?P<pk>\d+)/answer/', AnswerView.as_view())
+    url(r'^answer/', AnswerView.as_view())
 ]
 
 

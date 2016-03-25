@@ -6,7 +6,7 @@ from django.http import HttpResponse
 # from django.contrib.auth.forms import UserCreationForm
 from LinuxChallenge.models import User, Question, Flag, Level, Answer
 from LinuxChallenge.forms import SignUpForm, FlagForm
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, get_object_or_404
 
 
 class IndexView(TemplateView):
@@ -45,17 +45,22 @@ class AccountCreateView(CreateView):
 # 単純に保存特定のデータを取り出すView = 個別のオブジェクトを取り出すView
 # であるので，DetailViewを利用すると可能．ので，継承してパラメータを変え利用する．
 # http://docs.djangoproject.jp/en/latest/ref/class-based-views.html#detailview
-class QuestionDetailView(DetailView, FormMixin):
+class QuestionDetailView(DetailView):
     # 表示するモデルの種類を指定する．
     # ここでは，Questionの中でも一つを表示するのでQuestionを指定する．．
     model = Question
-    form_class = FlagForm
     # 表示するテンプレートはquestion.html．
     # ちなみに，template内ではobjectという変数に検索結果が与えられるらしい．
     # http://shinriyo.hateblo.jp/entry/2015/02/28/Django%E3%81%AEDetailView%E3%81%AE%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88
-    template_name = 'question.html'
-    # object = Question.objects.get(id=pk)
-    # render(template_name, object)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        form = FlagForm(initial={"answer": "", "q_id": self.object.id})
+        return render_to_response(template_name='question.html',
+                                  dictionary={"form": form, "question":self.object}, context=context)
+        # object = Question.objects.get(id=pk)
+        # render(template_name, object)
 
 
 class AnswerView(View):
@@ -65,7 +70,7 @@ class AnswerView(View):
             user = request.user
             q_id = form.cleaned_data['q_id']
             question = Question.objects.filter(id=q_id)
-            url = "question/"+q_id
+            url = "question/" + q_id
             user_answer = form.cleaned_data['answer']
             flag = Flag.objects.filter(question=question, flag=user_answer)
             answer = Answer(user=user, question=question, user_answer=user_answer, flag=flag)
