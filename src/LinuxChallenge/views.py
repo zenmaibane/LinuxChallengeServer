@@ -78,18 +78,18 @@ class AnswerView(View):
                 answer = Answer(user=user, question=ques, user_answer=user_answer, flag=None)
                 answer.save()
                 is_correct = False
-                return render(request=request, template_name="challenge.html",
+                return render(request=request, template_name="question.html",
                               dictionary={"is_correct": is_correct})
 
             #回答の重複処理
             if flag and Answer.objects.filter(user=user, question=ques, flag=flag).exists():
                 is_duplicate = True
-                return render(request=request, template_name="challenge.html",
+                return render(request=request, template_name="question.html",
                               dictionary={"is_duplicate": is_duplicate})
             answer = Answer(user=user, question=ques, user_answer=user_answer, flag=flag)
             answer.save()
             is_correct = True
-            return render(request=request, template_name="challenge.html",
+            return render(request=request, template_name="question.html",
                               dictionary={"is_correct": is_correct})
 
 

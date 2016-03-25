@@ -50,7 +50,7 @@ class Answer(models.Model):
     flag = models.ForeignKey('Flag', blank=True, null=True)
 
     def __str__(self):
-        return self.userAnswer
+        return self.user_answer
 
 
 
