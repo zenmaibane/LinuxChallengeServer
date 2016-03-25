@@ -15,7 +15,7 @@
          <tbody>
          {% for q in ques.questions %}
          <tr>
-             <td>{{ q.title }}</td>
+             <td><a href="../questions/{{ q.id }}">{{ q.title }}</a></td>
              <td>{{ q.points }}</td>
          </tr>
          {% endfor %}

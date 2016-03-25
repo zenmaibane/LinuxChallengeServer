@@ -27,6 +27,6 @@ admin.site.register(Flag, FlagAdmin)
 
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'question', 'userAnswer', 'flag',)
-    list_display_links = ('user', 'question', 'userAnswer', 'flag',)
+    list_display = ('user', 'question', 'user_answer', 'flag',)
+    list_display_links = ('user', 'question', 'user_answer', 'flag',)
 admin.site.register(Answer, AnswerAdmin)

@@ -27,14 +27,14 @@ class Question(models.Model):
     def __str__(self):
         return self.title
 
-    # @property
-    # def points(self):
-    #     return sum([o.point for o in self.flag_set.all()])
+    @property
+    def points(self):
+        return sum([o.point for o in self.flag_set.all()])
 
 
 class Flag(models.Model):
     """正解のフラグ"""
-    flag = models.CharField('フラグ', max_length=255)
+    flag = models.CharField('フラグ', max_length=255, unique=True)
     point = models.IntegerField('得点')
     question = models.ForeignKey(Question, verbose_name='問題')
 
@@ -46,7 +46,7 @@ class Answer(models.Model):
     """ユーザの解答"""
     user = models.ForeignKey(User, verbose_name='解答者')
     question = models.ForeignKey(Question, verbose_name='問題')
-    userAnswer = models.CharField('解答', max_length=255)
+    user_answer = models.CharField('解答', max_length=255)
     flag = models.ForeignKey('Flag', blank=True, null=True)
 
     def __str__(self):
