@@ -8,8 +8,17 @@ from django.contrib.messages import error, success
 from django.template import RequestContext
 
 
-class IndexView(TemplateView):
-    template_name = "index.html"
+class IndexView(View):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated():
+           return redirect(reverse("challenge"))
+        return self.login(request)
+
+    def login(self, request):
+     return views.login(request=request, template_name='index.html', redirect_field_name='challenge.html')
+
+
 
 
 class RankingView(TemplateView):
@@ -88,10 +97,6 @@ class AnswerView(View):
             answer = Answer(user=user, question=question, user_answer=user_answer, flag=flag)
             answer.save()
             return redirect(question_page)
-
-
-def login(request):
-    return views.login(request=request, template_name='index.html', redirect_field_name='challenge.html')
 
 
 def logout_then_login(request):

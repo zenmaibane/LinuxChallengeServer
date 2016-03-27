@@ -16,13 +16,13 @@ Including another URLconf
 from django.conf.urls import url, patterns, include
 from django.contrib.auth import views as auth_view
 from LinuxChallenge import views
-from LinuxChallenge.views import ChallengeView, RankingView, AccountCreateView, QuestionDetailView, AnswerView
+from LinuxChallenge.views import IndexView, ChallengeView, RankingView, AccountCreateView, QuestionDetailView, AnswerView
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.login, name="Index"),
+    url(r'^$', IndexView.as_view(), name="Index"),
     url(r'^logout/', auth_view.logout_then_login),
     url(r'^ranking/', RankingView.as_view()),
     url(r'^signup/', AccountCreateView.as_view(), name='signup'),
