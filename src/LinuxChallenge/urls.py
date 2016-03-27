@@ -23,6 +23,7 @@ from django.contrib.auth.decorators import login_required
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', IndexView.as_view(), name="Index"),
+    url(r'^login/', views.login, name="login"),
     url(r'^logout/', auth_view.logout_then_login),
     url(r'^ranking/', RankingView.as_view()),
     url(r'^signup/', AccountCreateView.as_view(), name='signup'),

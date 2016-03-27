@@ -20,16 +20,13 @@
      {% if form.errors %}
          <p>Your username and password didn't match. Please try again.</p>
      {% endif %}
-      <form method="post">
+      <form method="post" action="">
      <fieldset>
      {% csrf_token %}
          {{ form.as_p }}
          <input class="waves-effect waves-light btn" type="submit" value="Login">
          </fieldset>
               </form>
-     </div>
-     <div>
-     <a class="waves-effect waves-light btn" href="logout">logout</a>
      </div>
 {% endblock %}
 
