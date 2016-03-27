@@ -6,20 +6,10 @@
             {{ question.sentence }}
         </div>
     {% for message in messages %}
-    <p>{{ message }}</p>
+        <div class="message">
+            <p>{{ message }}</p>
+        </div>
 {% endfor %}
-    <div class="message">
-    {% if not is_correct == None %}
-    {% if  is_correct %}
-        <p>correct</p>
-        {% elif not is_correct %}
-        <p>That's incorrect.</p>
-    {% endif %}
-    {% if is_duplicate %}
-    <p>duplicate</p>
-    {% endif %}
-       {% endif %}
-    </div>
     <form method="post" action="/answer/">
     <fieldset>
         {% csrf_token %}

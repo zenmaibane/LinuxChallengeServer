@@ -2,21 +2,22 @@
 
 {% block contents %}
     {#         レベルの数だけループ#}
-    {% for ques in questions_per_lev %}
-        <caption>level{{ ques.levels.stage }}</caption>
+    {% for ques_per_lev in questions_per_lev %}
+        <caption>level{{ ques_per_lev.levels.stage }}</caption>
     <table class="striped">
           <thead>
           <tr>
               <th>Title</th>
               <th>Points</th>
-{#              <th>Solved</th>#}
+              <th>Acquired Points</th>
           </tr>
           </thead>
          <tbody>
-         {% for q in ques.questions %}
+         {% for question in ques_per_lev.questions %}
          <tr>
-             <td><a href="../questions/{{ q.id }}">{{ q.title }}</a></td>
-             <td>{{ q.points }}</td>
+             <td><a href="../questions/{{ question.q.id }}">{{ question.q.title }}</a></td>
+             <td>{{ question.q.points }}</td>
+         <td>{{ question.acquired_points }}</td>
          </tr>
          {% endfor %}
          </tbody>

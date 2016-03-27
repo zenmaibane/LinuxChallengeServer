@@ -22,11 +22,25 @@ class RankingView(TemplateView):
 
 class ChallengeView(View):
     def get(self, request):
+        user = request.user
+        answers__per_level = []
         questions_per_level = []
         l = Level.objects.all()
         for lev in l:
+            questions = Question.objects.filter(level__stage__exact=lev.stage)
+            questions_array = []
+            for question in questions:
+                questions_array.append(question)
+                acquired_points = 0
+                for flag in question.flag_set.all():
+                    try:
+                        answer = Answer.objects.get(user=user, flag=flag)
+                        acquired_points += answer.flag.point
+                    except Answer.DoesNotExist:
+                        pass
+                questions_array.append({"q": question, "acquired_points": acquired_points})
             questions_per_level.append(
-                {"levels": lev, "questions": Question.objects.filter(level__stage__exact=lev.stage)})
+                {"levels": lev, "questions": questions_array})
         return render(request=request, template_name="challenge.html",
                       dictionary={"questions_per_lev": questions_per_level})
 
