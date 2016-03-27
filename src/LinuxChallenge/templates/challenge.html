@@ -9,7 +9,7 @@
           <tr>
               <th>Title</th>
               <th>Points</th>
-              <th>Acquired Points</th>
+              <th>Points you got</th>
           </tr>
           </thead>
          <tbody>
@@ -17,7 +17,7 @@
          <tr>
              <td><a href="../questions/{{ question.q.id }}">{{ question.q.title }}</a></td>
              <td>{{ question.q.points }}</td>
-         <td>{{ question.acquired_points }}</td>
+         <td>{{ question.get_points }}</td>
          </tr>
          {% endfor %}
          </tbody>

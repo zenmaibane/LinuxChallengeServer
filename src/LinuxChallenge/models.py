@@ -48,6 +48,7 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, verbose_name='問題')
     user_answer = models.CharField('解答', max_length=255)
     flag = models.ForeignKey('Flag', blank=True, null=True)
+    time = models.DateTimeField()
 
     def __str__(self):
         return self.user_answer

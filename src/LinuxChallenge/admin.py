@@ -3,8 +3,8 @@ from LinuxChallenge.models import User, Level, Question, Flag, Answer
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('point',)
-    list_display_links = ('point',)
+    list_display = ("username", 'point')
+    list_display_links = ("username", 'point',)
 admin.site.register(User, UserAdmin)
 
 
@@ -27,6 +27,6 @@ admin.site.register(Flag, FlagAdmin)
 
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'question', 'user_answer', 'flag',)
-    list_display_links = ('user', 'question', 'user_answer', 'flag',)
+    list_display = ('user', 'question', 'user_answer', 'flag', 'time')
+    list_display_links = ('user', 'question', 'user_answer', 'flag', 'time')
 admin.site.register(Answer, AnswerAdmin)

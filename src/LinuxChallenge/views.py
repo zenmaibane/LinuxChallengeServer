@@ -6,6 +6,8 @@ from LinuxChallenge.forms import SignUpForm, FlagForm
 from django.shortcuts import render, render_to_response, redirect
 from django.contrib.messages import error, success
 from django.template import RequestContext
+from django.http import HttpRequest
+import datetime
 
 
 class IndexView(View):
@@ -23,7 +25,6 @@ class RankingView(TemplateView):
 class ChallengeView(View):
     def get(self, request):
         user = request.user
-        answers__per_level = []
         questions_per_level = []
         l = Level.objects.all()
         for lev in l:
@@ -31,14 +32,14 @@ class ChallengeView(View):
             questions_array = []
             for question in questions:
                 questions_array.append(question)
-                acquired_points = 0
+                get_points = 0
                 for flag in question.flag_set.all():
                     try:
                         answer = Answer.objects.get(user=user, flag=flag)
-                        acquired_points += answer.flag.point
+                        get_points += answer.flag.point
                     except Answer.DoesNotExist:
                         pass
-                questions_array.append({"q": question, "acquired_points": acquired_points})
+                questions_array.append({"q": question, "get_points": get_points})
             questions_per_level.append(
                 {"levels": lev, "questions": questions_array})
         return render(request=request, template_name="challenge.html",
@@ -94,7 +95,8 @@ class AnswerView(View):
             try:
                 flag = Flag.objects.get(question=question, correct_answer__exact=user_answer)
             except Flag.DoesNotExist:
-                answer = Answer(user=user, question=question, user_answer=user_answer, flag=None)
+                answer = Answer(user=user, question=question, user_answer=user_answer, flag=None,
+                                time=datetime.datetime.now())
                 answer.save()
                 error(request, "That's incorrect.")
                 return redirect(question_page)
@@ -102,10 +104,15 @@ class AnswerView(View):
             if flag and Answer.objects.filter(user=user, question=question, flag=flag).exists():
                 error(request, "The flag is already submitted.")
                 return redirect(question_page)
-            success(request, "Correct!")
-            answer = Answer(user=user, question=question, user_answer=user_answer, flag=flag)
+            success(request, "Correct! You got " + str(flag.point) + " points !!!")
+            answer = Answer(user=user, question=question, user_answer=user_answer, flag=flag,
+                            time=datetime.datetime.now())
             answer.save()
             return redirect(question_page)
+        return self.get(request=request)
+
+    def get(self, request, *args, **kwargs):
+        return redirect(reverse("challenge"))
 
 
 def login(request):
