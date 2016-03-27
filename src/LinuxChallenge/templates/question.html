@@ -5,9 +5,12 @@
         <div class="sentence">
             {{ question.sentence }}
         </div>
+    {% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
     <div class="message">
-    {% if is_correct == None %}
-    {% elif is_correct %}
+    {% if not is_correct == None %}
+    {% if  is_correct %}
         <p>correct</p>
         {% elif not is_correct %}
         <p>That's incorrect.</p>
@@ -15,12 +18,12 @@
     {% if is_duplicate %}
     <p>duplicate</p>
     {% endif %}
+       {% endif %}
     </div>
     <form method="post" action="/answer/">
     <fieldset>
         {% csrf_token %}
         {{ form.as_p }}
-{#        <input type="hidden" value="{{ object.id }}" name="q_id">#}
         <input class="waves-effect waves-light btn" type="submit" value="submit">
     </fieldset>
     </form>
