@@ -94,13 +94,17 @@ class QuestionDetailView(DetailView):
     #                               dictionary={"form": form, "question": self.object}, context=context)
 
     def get(self, request, *args, **kwargs):
-        print(request.path)
+        url = request
+        user = request.user
         self.object = self.get_object()
-        context = self.get_context_data(object=self.object)
-        form = FlagForm(initial={"q_id": self.object.id})
-        return render_to_response(template_name='question.html',
+        if user.points >= self.object.level.stage_limit_point:
+            context = self.get_context_data(object=self.object)
+            form = FlagForm(initial={"q_id": self.object.id})
+            return render_to_response(template_name='question.html',
                                   dictionary={"form": form, "question": self.object},
                                   context_instance=RequestContext(request))
+        else:
+            return redirect(reverse("challenge"))
 
 
 class AnswerView(View):
