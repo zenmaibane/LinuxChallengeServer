@@ -4,10 +4,21 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     """ユーザ"""
-    point = models.IntegerField('合計点', blank=True, default=0)
+    # class Meta:
+    #     ordering = ['points', 'last_correct_answer_time']
 
     def __str__(self):
         return self.username
+
+    @property
+    def points(self):
+        user_correct_answer = Answer.objects.filter(user=self).exclude(flag=None)
+        return sum([answer.flag.point for answer in user_correct_answer])
+
+    @property
+    def last_correct_answer_time(self):
+        last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().time
+        return last_time
 
 
 class Level(models.Model):
@@ -38,6 +49,9 @@ class Flag(models.Model):
     point = models.IntegerField('得点')
     question = models.ForeignKey(Question, verbose_name='問題')
 
+    class Meta:
+        ordering = ['question']
+
     def __str__(self):
         return self.correct_answer
 
@@ -50,26 +64,9 @@ class Answer(models.Model):
     flag = models.ForeignKey('Flag', blank=True, null=True)
     time = models.DateTimeField()
 
+    class Meta:
+        ordering = ['time']
+        get_latest_by = 'time'
+
     def __str__(self):
         return self.user_answer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

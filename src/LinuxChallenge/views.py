@@ -1,6 +1,6 @@
 from django.contrib.auth import views
 from django.core.urlresolvers import reverse
-from django.views.generic import View, TemplateView, CreateView, DetailView
+from django.views.generic import View, TemplateView, CreateView, DetailView, ListView
 from LinuxChallenge.models import User, Question, Flag, Level, Answer
 from LinuxChallenge.forms import SignUpForm, FlagForm
 from django.shortcuts import render, render_to_response, redirect
@@ -18,8 +18,12 @@ class IndexView(View):
         return redirect(reverse("login"))
 
 
-class RankingView(TemplateView):
+class RankingView(ListView):
     template_name = 'ranking.html'
+
+    def get_queryset(self):
+        queryset = sorted(User.objects.all(), key=lambda user: (-user.points, user.last_correct_answer_time))
+        return queryset
 
 
 class ChallengeView(View):
@@ -28,9 +32,11 @@ class ChallengeView(View):
         questions_per_level = []
         l = Level.objects.all()
         for lev in l:
-            questions = Question.objects.filter(level__stage__exact=lev.stage)
+            questions = Question.objects.filter(level__stage=lev.stage)
             questions_array = []
             for question in questions:
+                # print("dddddd")
+                # print(question)
                 questions_array.append(question)
                 get_points = 0
                 for flag in question.flag_set.all():
@@ -40,8 +46,7 @@ class ChallengeView(View):
                     except Answer.DoesNotExist:
                         pass
                 questions_array.append({"q": question, "get_points": get_points})
-            questions_per_level.append(
-                {"levels": lev, "questions": questions_array})
+            questions_per_level.append({"levels": lev, "questions": questions_array})
         return render(request=request, template_name="challenge.html",
                       dictionary={"questions_per_lev": questions_per_level})
 
