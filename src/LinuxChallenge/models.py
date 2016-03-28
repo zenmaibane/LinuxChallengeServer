@@ -21,7 +21,13 @@ class User(AbstractUser):
     @property
     def last_correct_answer_time(self):
         pprint.pprint(self)
-        last_time = Answer.objects.filter(user=self).latest().time #.exclude(flag=None).latest().time
+        try:
+            last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().time
+        except Answer.DoesNotExist:
+            try:
+                last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().time
+            except Answer.DoesNotExist:
+                last_time = self.last_login
         return last_time
 
 
