@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     """ユーザ"""
+
     # class Meta:
     #     ordering = ['points', 'last_correct_answer_time']
 
@@ -24,6 +25,7 @@ class User(AbstractUser):
 class Level(models.Model):
     """問題のレベル"""
     stage = models.IntegerField('レベル')
+    stage_limit_point = models.IntegerField('表示制限ポイント')
 
     def __str__(self):
         return str(self.stage)
