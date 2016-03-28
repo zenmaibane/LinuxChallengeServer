@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+ {% block login_required %}
+     <div>
+         name:{{ request.user.username }}
+         <br>
+         points:{{ request.user.points }}
+     </div>
+ {% endblock %}
+
+{% block contents %}
+{% endblock %}

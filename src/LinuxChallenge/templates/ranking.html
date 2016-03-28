@@ -1,0 +1,28 @@
+{% extends "base_login_required.html" %}
+
+{% block contents %}
+    <table class="striped bordered">
+    <thead>
+    <tr>
+        <th>
+            Rank
+        </th>
+        <th>
+           Name
+        </th>
+        <th>
+            Score
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ object.username }}</td>
+        <td>{{ object.points }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+            </table>
+{% endblock %}

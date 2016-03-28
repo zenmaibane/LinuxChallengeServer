@@ -1,0 +1,21 @@
+{% extends "base_login_required.html" %}
+
+{% block contents %}
+        <h1>Q.{{ question.id }}. {{ question.title }}</h1>
+        <div class="sentence">
+            {{ question.sentence }}
+        </div>
+    {% for message in messages %}
+        <div class="message">
+            <p>{{ message }}</p>
+        </div>
+{% endfor %}
+    <form method="post" action="/answer/">
+    <fieldset>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="waves-effect waves-light btn" type="submit" value="submit">
+    </fieldset>
+    </form>
+
+{% endblock %}
