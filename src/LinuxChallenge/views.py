@@ -1,3 +1,5 @@
+import pprint
+
 from django.contrib.auth import views
 from django.core.urlresolvers import reverse
 from django.views.generic import View, TemplateView, CreateView, DetailView, ListView
@@ -51,6 +53,7 @@ class ChallengeView(View):
                 questions_per_level.append({"levels": lev, "questions": questions_array})
             else:
                 break
+        pprint.pprint({"questions_per_lev": questions_per_level})
         return render(request=request, template_name="challenge.html",
                       dictionary={"questions_per_lev": questions_per_level},
                       context_instance=RequestContext(request))
@@ -97,11 +100,20 @@ class QuestionDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         user = request.user
         self.object = self.get_object()
+        total_point = self.object.points
+        user_get_points = 0
+        for f in self.object.flag_set.all():
+                try:
+                    answer = Answer.objects.get(user=user, flag=f)
+                    user_get_points += answer.flag.point
+                except Answer.DoesNotExist:
+                    pass
+        is_clear = total_point == user_get_points
         if user.points >= self.object.level.stage_limit_point:
-            context = self.get_context_data(object=self.object)
+            # context = self.get_context_data(object=self.object)
             form = FlagForm(initial={"q_id": self.object.id})
             return render_to_response(template_name='question.html',
-                                      dictionary={"form": form, "question": self.object},
+                                      dictionary={"form": form, "question": self.object, "is_clear": is_clear},
                                       context_instance=RequestContext(request))
         else:
             return redirect(reverse("challenge"))
