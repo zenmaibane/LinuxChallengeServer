@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^$', IndexView.as_view(), name="Index"),
     url(r'^login/', views.login, name="login"),
     url(r'^logout/', auth_view.logout_then_login),
-    url(r'^ranking/', RankingView.as_view()),
+    url(r'^ranking/', login_required(RankingView.as_view())),
     url(r'^signup/', AccountCreateView.as_view(), name='signup'),
     url(r'^challenge/', login_required(ChallengeView.as_view()), name='challenge'),
     # ?P<何か>という書き方は，viewに対してurlについている数値を何と言う名前の変数に入れて渡せばいいのかを指定するもの．
@@ -35,7 +35,7 @@ urlpatterns = [
     # ちなみに，DetailViewでは，pkという変数にPrimaryKeyになる値（Djangoではidですが……）を代入するように書くと
     # 自動で検索して，objectをセットしてくれます．
     url(r'^questions/(?P<pk>\d+)$', login_required(QuestionDetailView.as_view()), name="question"),
-    url(r'^answer/', AnswerView.as_view())
+    url(r'^answer/', login_required(AnswerView.as_view()))
 ]
 
 

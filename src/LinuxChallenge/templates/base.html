@@ -10,8 +10,10 @@
     <script type="text/javascript" src="{% static  'materialize/js/materialize.min.js' %}"></script>
 </head>
 <body>
- {% block contents %}
+ {% block login_required %}
+ {% endblock %}
 
+ {% block contents %}
  {% endblock %}
 </body>
 </html>

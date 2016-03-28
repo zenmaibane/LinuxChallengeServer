@@ -139,4 +139,4 @@ STATICFILES_FINDERS = (
 #LOGIN → REDIRECT_URL
 LOGIN_REDIRECT_URL = "/challenge/"
 
-LOGIN_URL = "/login/"
+LOGIN_URL = "/login"

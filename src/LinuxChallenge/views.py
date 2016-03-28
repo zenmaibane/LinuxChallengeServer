@@ -52,7 +52,8 @@ class ChallengeView(View):
             else:
                 break
         return render(request=request, template_name="challenge.html",
-                      dictionary={"questions_per_lev": questions_per_level})
+                      dictionary={"questions_per_lev": questions_per_level},
+                      context_instance=RequestContext(request))
 
     def user_achieved_level(self, request):
         points = request.user.points
@@ -94,15 +95,14 @@ class QuestionDetailView(DetailView):
     #                               dictionary={"form": form, "question": self.object}, context=context)
 
     def get(self, request, *args, **kwargs):
-        url = request
         user = request.user
         self.object = self.get_object()
         if user.points >= self.object.level.stage_limit_point:
             context = self.get_context_data(object=self.object)
             form = FlagForm(initial={"q_id": self.object.id})
             return render_to_response(template_name='question.html',
-                                  dictionary={"form": form, "question": self.object},
-                                  context_instance=RequestContext(request))
+                                      dictionary={"form": form, "question": self.object},
+                                      context_instance=RequestContext(request))
         else:
             return redirect(reverse("challenge"))
 

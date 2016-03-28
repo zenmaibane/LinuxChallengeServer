@@ -1,3 +1,5 @@
+import pprint
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -18,7 +20,8 @@ class User(AbstractUser):
 
     @property
     def last_correct_answer_time(self):
-        last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().time
+        pprint.pprint(self)
+        last_time = Answer.objects.filter(user=self).latest().time #.exclude(flag=None).latest().time
         return last_time
 
 
