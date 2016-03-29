@@ -19,17 +19,19 @@
       <hr>
       <li class="pure-menu-item"><a href="{%url 'ranking' %}" class="pure-menu-link nmkn-item"><i class="fi-trophy"></i>Ranking</a></li>
       <li class="pure-menu-item"><a href="{%url 'notice' %}" class="pure-menu-link nmkn-item"><i class="fi-alert"></i>Notice</a></li>
+      <hr>
+      <li class="pure-menu-item"><a href="{%url 'logout' %}" class="pure-menu-link nmkn-item"><i class="fi-foot"></i>Logout</a></li>
     </ul>
   </div>
-    <div id="menu-footer">
+    <footer id="menu-footer">
       {% block login_required %}
       {% endblock %}
-  </div>
+  </footer>
 </div>
   
-  <div id="content">
+  <article id="content-wrapper">
     {% block contents %}
     {% endblock %}
-  </div>
+  </article>
 </body>
 </html>

@@ -1,31 +1,39 @@
 {% extends "base_login_required.html" %}
 
 {% block contents %}
-    {#         レベルの数だけループ#}
-    {% for ques_per_lev in questions_per_lev %}
-        <caption>level{{ ques_per_lev.levels.stage }}</caption>
-        <table class="striped bordered">
-            <thead>
-           <tr>
-              <th>Title</th>
-              <th>Points</th>
-              <th>Points you got</th>
-           </tr>
-           </thead>
+  {% for ques_per_lev in questions_per_lev %}
+    <section class="card">
+      <h1>Level.{{ ques_per_lev.levels.stage }}</h1>
+      <table class="pure-table nmkn-table">
+        <thead>
+         <tr>
+            <th class="id">ID</th>
+            <th class="title">Title</th>
+            <th class="points">Points</th>
+            <th class="answer-points">Points you got</th>
+            <th class="compleate">Compleate?</th>
+         </tr>
+        </thead>
         <tbody>
-         {% for question in ques_per_lev.questions %}
-             {% if not question.q.id == None %}
-             <tr>
-             <td><a href="../questions/{{ question.q.id }}">{{ question.q.title }}</a></td>
-             <td>{{ question.q.points }}</td>
-             <td>{{ question.get_points }}</td>
-             </tr>
-             {% endif %}
-         {% endfor %}
+          {% for question in ques_per_lev.questions %}
+            {% if not question.q.id == None %}
+              <tr>
+                <td>{{ question.q.id }}</td>
+                <td><a href="{%url 'question' question.q.id %}">{{ question.q.title }}</a></td>
+                <td>{{ question.q.points }}</td>
+                <td>{{ question.get_points }}</td>
+                <td style="text-align:center;">
+                  {% if question.q.points == question.get_points %}
+                    <i class="fi-crown good"></i>
+                  {% else %}
+                    <i class="fi-x bad"></i>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
         </tbody>
-        </table>
-    {% endfor %}
-     <div>
-     <a class="waves-effect waves-light btn" href="../logout">logout</a>
-     </div>
+      </table>
+    </section>
+  {% endfor %}
 {% endblock %}
