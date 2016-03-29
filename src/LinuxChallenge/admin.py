@@ -1,5 +1,5 @@
 from django.contrib import admin
-from LinuxChallenge.models import User, Level, Question, Flag, Answer
+from LinuxChallenge.models import User, Level, Question, Flag, Answer, Notice
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -24,6 +24,12 @@ class FlagAdmin(admin.ModelAdmin):
     list_display = ('correct_answer', 'point', 'question',)
     list_display_links = ('correct_answer', 'point', 'question',)
 admin.site.register(Flag, FlagAdmin)
+
+
+class NoticeAdmin(admin.ModelAdmin):
+    list_display = ('title', 'sentence', 'published_time')
+    list_display_links = ('title', 'sentence', 'published_time')
+admin.site.register(Notice, NoticeAdmin)
 
 
 class AnswerAdmin(admin.ModelAdmin):

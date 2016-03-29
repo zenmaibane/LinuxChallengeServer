@@ -2,13 +2,12 @@ import pprint
 
 from django.contrib.auth import views
 from django.core.urlresolvers import reverse
-from django.views.generic import View, TemplateView, CreateView, DetailView, ListView
-from LinuxChallenge.models import User, Question, Flag, Level, Answer
+from django.views.generic import View, CreateView, DetailView, ListView
+from LinuxChallenge.models import User, Question, Flag, Level, Answer, Notice
 from LinuxChallenge.forms import SignUpForm, FlagForm
 from django.shortcuts import render, render_to_response, redirect
 from django.contrib.messages import error, success
 from django.template import RequestContext
-from django.http import HttpRequest
 import datetime
 
 
@@ -150,6 +149,11 @@ class AnswerView(View):
         if ref_page is None:
             return redirect(reverse("challenge"))
         return ref_page
+
+
+class NoticeView(ListView):
+    template_name = "notice.html"
+    model = Notice
 
 
 def login(request):
