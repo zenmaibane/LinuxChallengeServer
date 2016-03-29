@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block contents %}
-
+      {% for message in messages %}
+        <div class="message">
+            <p>{{ message }}</p>
+        </div>
+      {% endfor %}
     <form method="post" action="">
      <fieldset>
      {% csrf_token %}
