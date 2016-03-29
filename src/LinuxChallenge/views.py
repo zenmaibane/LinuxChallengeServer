@@ -100,17 +100,15 @@ class QuestionDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         user = request.user
         self.object = self.get_object()
-        total_point = self.object.points
-        user_get_points = 0
+        is_clear = None
         for f in self.object.flag_set.all():
                 try:
                     answer = Answer.objects.get(user=user, flag=f)
-                    user_get_points += answer.flag.point
+                    is_clear = True
                 except Answer.DoesNotExist:
-                    pass
-        is_clear = total_point == user_get_points
+                    is_clear = False
+                    break
         if user.points >= self.object.level.stage_limit_point:
-            # context = self.get_context_data(object=self.object)
             form = FlagForm(initial={"q_id": self.object.id})
             return render_to_response(template_name='question.html',
                                       dictionary={"form": form, "question": self.object, "is_clear": is_clear},
