@@ -84,3 +84,6 @@ class Notice(models.Model):
     title = models.CharField('タイトル', max_length=255)
     sentence = models.TextField("内容")
     published_time = models.DateTimeField("公開された時間", default=timezone_now)
+
+    class Meta:
+        ordering = ["-published_time"]
