@@ -53,20 +53,6 @@ class ChallengeView(View):
                       dictionary={"questions_per_lev": questions_per_level},
                       context_instance=RequestContext(request))
 
-    def user_achieved_level(self, request):
-        points = request.user.points
-        level = Level.objects.all()
-        return_lev = 0
-        for l in level:
-            if points >= l.stage_limit_point:
-                return_lev = l.stage
-                print("test"+str(return_lev))
-            else:
-                break
-        print(return_lev)
-        return return_lev
-
-
 class AccountCreateView(CreateView):
     model = User
     form_class = SignUpForm
