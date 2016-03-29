@@ -1,0 +1,121 @@
+main_color = #00BCD4
+sub_color = #0097A7
+light_primary_color = #B2EBF2
+message_box_color = #f0f0f0
+
+shadow = #727272
+
+font_color = #212121
+sub_font_color = #727272
+menu_font_color = #FFFFFF
+
+accent_color = #FF4081
+clear_color = #00C853
+
+body
+  background-color light_primary_color
+
+#mein-menu
+  bottom 0
+  top 0
+  width 200px
+  height calc(100% - 45px)
+  overflow auto
+  position fixed
+  
+  background-color main_color
+  color menu_font_color
+  
+  .logo
+    text-transform none
+    font-size 17px
+    text-align center
+    color menu_font_color
+    margin-bottom 0
+  
+  .nmkn-item
+    color menu_font_color
+    font-size 16px
+    
+    &:hover
+      color main_color
+      background-color font_color
+    
+    &:focus
+      color main_color
+      background-color font_color
+    
+  .nmkn-menu
+    margin-bottom 50px
+    overflow hidden
+  
+  i 
+    margin-right 0.5em
+  
+  hr
+    border solid sub_color 1px
+  
+  #menu-footer
+    display table
+    bottom 0
+    height 45px
+    width 200px
+    position fixed
+    overflow hidden
+    background-color sub_color
+  
+    .user-info
+      text-align center
+      display table-cell
+      vertical-align middle
+
+#content-wrapper
+  margin-left 210px
+  color font_color
+  
+  .card
+    padding 1em
+    width 80%
+    margin 2em auto
+    background-color white
+    box-shadow 1px 1px 29px -5px shadow
+    .sentence
+      background-color message_box_color
+      margin 1em
+      padding 1em
+    hr
+      border solid sub_color 1px
+    strong
+      color accent_color
+    .pure-button-success
+      color white
+      border-radius 4px
+      text-shadow 0 1px 1px rgba(0, 0, 0, 0.2)
+      background rgb(28, 184, 65)
+    .pure-form
+      input
+        width 100%
+    .notice-footer
+      margin-top 2em
+      border-top solid 2px sub_color
+      text-align right
+      color sub_font_color
+
+.nmkn-table
+  width 100%
+  .id
+    width 5%
+  .title
+    width 45%
+  .points
+    width 20%
+  .answer-points
+    width 20%
+  .compleate
+    width 10%
+    text-align center
+  .good
+    color clear_color
+  .bad
+    color accent_color
+

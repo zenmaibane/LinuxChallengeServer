@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block contents %}
+  {% for notice in notice_list %}
+    <section class="card">
+      <h1>{{ notice.title }}</h1>
+      <hr>
+      {{ notice.sentence }}
+      <div class="notice-footer">
+        {{ notice.published_time }}
+      </div>
+    </section>
+  {% endfor %}
+{% endblock %}

@@ -1,13 +1,20 @@
 {% extends "base.html" %}
 
 {% block contents %}
-
-    <form method="post" action="">
-     <fieldset>
-     {% csrf_token %}
-         {{ form.as_p }}
-         <input class="waves-effect waves-light btn" type="submit" value="Create_User">
-         </fieldset>
-              </form>
-
+  <section class="card">
+    <h1>Regist User</h1>
+    <hr>
+    {% for message in messages %}
+      <div class="message">
+          <p>{{ message }}</p>
+      </div>
+    {% endfor %}
+    <form method="post" action="{%url 'signup' %}" class="pure-form">
+      <fieldset>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="pure-button pure-button-primary" type="submit">SignUp!</button>
+     </fieldset>
+    </form>
+  </section>
 {% endblock %}
