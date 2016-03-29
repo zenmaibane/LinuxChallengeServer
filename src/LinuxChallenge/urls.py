@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^$', IndexView.as_view(), name="Index"),
     url(r'^login/', views.login, name="login"),
     url(r'^logout/', auth_view.logout_then_login),
-    url(r'^ranking/', login_required(RankingView.as_view())),
+    url(r'^ranking/', login_required(RankingView.as_view()), name='ranking'),
     url(r'^signup/', AccountCreateView.as_view(), name='signup'),
     url(r'^challenge/', login_required(ChallengeView.as_view()), name='challenge'),
     url(r'^notice/', NoticeView.as_view(), name='notice'),
