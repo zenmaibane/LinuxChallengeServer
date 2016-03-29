@@ -34,9 +34,8 @@ class ChallengeView(View):
         user = request.user
         questions_per_level = []
         l = Level.objects.all()
-        limit = self.user_achieved_level(request)
-        for i, lev in enumerate(l):
-            if i <= limit:
+        for lev in l:
+            if user.points >= lev.stage_limit_point:
                 questions = Question.objects.filter(level__stage=lev.stage)
                 questions_array = []
                 for question in questions:
@@ -55,18 +54,6 @@ class ChallengeView(View):
         return render(request=request, template_name="challenge.html",
                       dictionary={"questions_per_lev": questions_per_level},
                       context_instance=RequestContext(request))
-
-    def user_achieved_level(self, request):
-        points = request.user.points
-        level = Level.objects.all()
-        return_lev = 0
-        for l in level:
-            if points >= l.stage_limit_point:
-                return_lev = l.stage
-            else:
-                break
-        return return_lev
-
 
 class AccountCreateView(CreateView):
     model = User
