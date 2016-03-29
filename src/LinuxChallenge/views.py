@@ -40,8 +40,6 @@ class ChallengeView(View):
                 questions = Question.objects.filter(level__stage=lev.stage)
                 questions_array = []
                 for question in questions:
-                    # print("dddddd")
-                    # print(question)
                     questions_array.append(question)
                     get_points = 0
                     for flag in question.flag_set.all():
@@ -54,7 +52,6 @@ class ChallengeView(View):
                 questions_per_level.append({"levels": lev, "questions": questions_array})
             else:
                 break
-        pprint.pprint({"questions_per_lev": questions_per_level})
         return render(request=request, template_name="challenge.html",
                       dictionary={"questions_per_lev": questions_per_level},
                       context_instance=RequestContext(request))
@@ -88,23 +85,8 @@ class AccountCreateView(CreateView):
             return redirect(to=reverse("signup"))
 
 
-# 単純に保存特定のデータを取り出すView = 個別のオブジェクトを取り出すView
-# であるので，DetailViewを利用すると可能．ので，継承してパラメータを変え利用する．
-# http://docs.djangoproject.jp/en/latest/ref/class-based-views.html#detailview
 class QuestionDetailView(DetailView):
-    # 表示するモデルの種類を指定する．
-    # ここでは，Questionの中でも一つを表示するのでQuestionを指定する．．
     model = Question
-
-    # 表示するテンプレートはquestion.html．
-    # ちなみに，template内ではobjectという変数に検索結果が与えられるらしい．
-    # http://shinriyo.hateblo.jp/entry/2015/02/28/Django%E3%81%AEDetailView%E3%81%AE%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88
-    # def get(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     context = self.get_context_data(object=self.object)
-    #     form = FlagForm(initial={"answer": "", "q_id": self.object.id})
-    #     return render_to_response(template_name='question.html',
-    #                               dictionary={"form": form, "question": self.object}, context=context)
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -178,7 +160,6 @@ def login(request):
 def logout_then_login(request):
     return views.logout_then_login(request=request, next_page="index")
 
-
 def is_EventPeriod():
     current_DateTime = datetime.datetime.now()
     start_DateTime = datetime.datetime(2016, 3, 30, 17)
@@ -186,18 +167,3 @@ def is_EventPeriod():
     if start_DateTime <= current_DateTime <= end_DateTime:
         return True
     return False
-
-
-"""
-class HogoHogeView(mixin.SingleObjectMixin):
-    def get_object(self, query_set=None):
-        if user.point < query_set.level.point:
-            raise ValidationError(detail="You don't have permission", 403)
-        super(HogeHogeView, self).get_object(query_set)
-
-###
-# get_object()
-#  -> query_set => None
-# get_object(Question.objects.all)
-#  ->
-"""

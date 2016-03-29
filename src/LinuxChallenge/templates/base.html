@@ -5,15 +5,33 @@
 <head>
     <meta charset="UTF-8">
     <title>LinuxChallenge!!</title>
-    <link href="{% static  'materialize/css/materialize.min.css' %}" rel="stylesheet">
-    <script type="text/javascript" src="{% static  'jquery-2.2.1.min.js' %}"></script>
-    <script type="text/javascript" src="{% static  'materialize/js/materialize.min.js' %}"></script>
+    <link href="{% static  'pure/pure-min.css' %}" rel="stylesheet">
+    <link href="{% static  'foundation-icons/foundation-icons.css' %}" rel="stylesheet">
+    <link href="{% static  'design.css' %}" rel="stylesheet">
 </head>
 <body>
- {% block login_required %}
- {% endblock %}
-
- {% block contents %}
- {% endblock %}
+  <div id="mein-menu">
+  <div class="pure-menu nmkn-menu">
+    <h1 class="pure-menu-heading logo">LinuxChallenge</h1>
+    <hr>
+    <ul class="pure-menu-list">
+      <li class="pure-menu-item"><a href="{%url 'challenge' %}" class="pure-menu-link nmkn-item"><i class="fi-flag"></i>Challenges</a></li>
+      <hr>
+      <li class="pure-menu-item"><a href="{%url 'ranking' %}" class="pure-menu-link nmkn-item"><i class="fi-trophy"></i>Ranking</a></li>
+      <li class="pure-menu-item"><a href="{%url 'notice' %}" class="pure-menu-link nmkn-item"><i class="fi-alert"></i>Notice</a></li>
+      <hr>
+      <li class="pure-menu-item"><a href="{%url 'logout' %}" class="pure-menu-link nmkn-item"><i class="fi-foot"></i>Logout</a></li>
+    </ul>
+  </div>
+    <footer id="menu-footer">
+      {% block login_required %}
+      {% endblock %}
+  </footer>
+</div>
+  
+  <article id="content-wrapper">
+    {% block contents %}
+    {% endblock %}
+  </article>
 </body>
 </html>

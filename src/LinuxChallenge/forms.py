@@ -9,6 +9,6 @@ class SignUpForm(UserCreationForm):
 
 
 class FlagForm(forms.Form):
-    answer = forms.CharField(required=False)
+    answer = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'FLAG'}))
     q_id = forms.IntegerField(widget=forms.HiddenInput)
 
