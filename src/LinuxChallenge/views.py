@@ -134,7 +134,7 @@ class AnswerView(View):
                     answer.save()
                     error(request, "That's incorrect.")
                     return redirect(question_page)
-               # 回答の重複処理
+                # 回答の重複処理
                 if flag and Answer.objects.filter(user=user, question=question, flag=flag).exists():
                     error(request, "The flag is already submitted.")
                     return redirect(question_page)
