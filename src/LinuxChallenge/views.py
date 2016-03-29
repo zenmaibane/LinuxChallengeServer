@@ -32,9 +32,8 @@ class ChallengeView(View):
         user = request.user
         questions_per_level = []
         l = Level.objects.all()
-        limit = self.user_achieved_level(request)
-        for i, lev in enumerate(l):
-            if i <= limit:
+        for lev in l:
+            if user.points >= lev.stage_limit_point:
                 questions = Question.objects.filter(level__stage=lev.stage)
                 questions_array = []
                 for question in questions:
@@ -61,8 +60,10 @@ class ChallengeView(View):
         for l in level:
             if points >= l.stage_limit_point:
                 return_lev = l.stage
+                print("test"+str(return_lev))
             else:
                 break
+        print(return_lev)
         return return_lev
 
 
