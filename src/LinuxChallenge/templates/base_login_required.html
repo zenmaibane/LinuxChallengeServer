@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
  {% block login_required %}
-     <div>
-         name:{{ request.user.username }}
-         <br>
-         points:{{ request.user.points }}
-     </div>
+  <div class="user-info">
+    {{ request.user.username }} / <b>{{ request.user.points }}</b> pts.
+  </div>
  {% endblock %}
 
 {% block contents %}
