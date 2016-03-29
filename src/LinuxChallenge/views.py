@@ -52,7 +52,6 @@ class ChallengeView(View):
                 questions_per_level.append({"levels": lev, "questions": questions_array})
             else:
                 break
-        pprint.pprint({"questions_per_lev": questions_per_level})
         return render(request=request, template_name="challenge.html",
                       dictionary={"questions_per_lev": questions_per_level},
                       context_instance=RequestContext(request))
