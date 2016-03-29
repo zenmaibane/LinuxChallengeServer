@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, patterns, include
 from django.contrib.auth import views as auth_view
 from LinuxChallenge import views
-from LinuxChallenge.views import IndexView, ChallengeView, RankingView, AccountCreateView, QuestionDetailView, AnswerView
+from LinuxChallenge.views import IndexView, ChallengeView, RankingView, AccountCreateView, QuestionDetailView, AnswerView, NoticeView
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^ranking/', login_required(RankingView.as_view())),
     url(r'^signup/', AccountCreateView.as_view(), name='signup'),
     url(r'^challenge/', login_required(ChallengeView.as_view()), name='challenge'),
+    url(r'^notice/', NoticeView.as_view(), name='notice'),
     # ?P<何か>という書き方は，viewに対してurlについている数値を何と言う名前の変数に入れて渡せばいいのかを指定するもの．
     # 例えば，以下のようなURLにアクセスしたなら……
     #     http://picture-of.pro/questions/1

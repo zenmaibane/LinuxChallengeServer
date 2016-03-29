@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block contents %}
+    {% for notice in notice_list %}
+        <div class="notice-header">
+        {{ notice.title }}
+        </div>
+        <div class="notice-body">
+        {{ notice.sentence }}
+        </div>
+        <div class="notice-footer">
+        {{ notice.published_time }}
+        </div>
+    {% endfor %}
+
+{% endblock %}

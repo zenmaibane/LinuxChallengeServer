@@ -1,14 +1,11 @@
 import pprint
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.timezone import now as timezone_now
 
 
 class User(AbstractUser):
     """ユーザ"""
-
-    # class Meta:
-    #     ordering = ['points', 'last_correct_answer_time']
 
     def __str__(self):
         return self.username
@@ -81,3 +78,9 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.user_answer
+
+
+class Notice(models.Model):
+    title = models.CharField('タイトル', max_length=255)
+    sentence = models.TextField("内容")
+    published_time = models.DateTimeField("公開された時間", default=timezone_now)
