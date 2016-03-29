@@ -125,23 +125,28 @@ class AnswerView(View):
             question = Question.objects.get(id=q_id)
             user_answer = form.cleaned_data['answer']
             question_page = "/questions/" + str(q_id)
-            try:
-                flag = Flag.objects.get(question=question, correct_answer__exact=user_answer)
-            except Flag.DoesNotExist:
-                answer = Answer(user=user, question=question, user_answer=user_answer, flag=None,
-                                time=datetime.datetime.now())
-                answer.save()
-                error(request, "That's incorrect.")
-                return redirect(question_page)
-            # 回答の重複処理
-            if flag and Answer.objects.filter(user=user, question=question, flag=flag).exists():
-                error(request, "The flag is already submitted.")
-                return redirect(question_page)
-            success(request, "Correct! You got " + str(flag.point) + " points !!!")
-            answer = Answer(user=user, question=question, user_answer=user_answer, flag=flag,
+            if is_EventPeriod(request):
+                try:
+                    flag = Flag.objects.get(question=question, correct_answer__exact=user_answer)
+                except Flag.DoesNotExist:
+                    answer = Answer(user=user, question=question, user_answer=user_answer, flag=None,
+                                    time=datetime.datetime.now())
+                    answer.save()
+                    error(request, "That's incorrect.")
+                    return redirect(question_page)
+               # 回答の重複処理
+                if flag and Answer.objects.filter(user=user, question=question, flag=flag).exists():
+                    error(request, "The flag is already submitted.")
+                    return redirect(question_page)
+                success(request, "Correct! You got " + str(flag.point) + " points !!!")
+                answer = Answer(user=user, question=question, user_answer=user_answer, flag=flag,
                             time=datetime.datetime.now())
-            answer.save()
-            return redirect(question_page)
+                answer.save()
+                return redirect(question_page)
+            else:
+                error(request, "Sorry! Outside of service hours.")
+                return redirect(question_page)
+
         return self.get(request=request)
 
     def get(self, request, *args, **kwargs):
@@ -162,6 +167,16 @@ def login(request):
 
 def logout_then_login(request):
     return views.logout_then_login(request=request, next_page="index")
+
+
+def is_EventPeriod(request):
+    current_DateTime = datetime.datetime.now()
+    start_DateTime = datetime.datetime(2016, 3, 29, 18)
+    end_DateTime = datetime.datetime(2016, 3, 30, 21)
+    if start_DateTime <= current_DateTime <= end_DateTime:
+        return True
+    return False
+
 
 
 """

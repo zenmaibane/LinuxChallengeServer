@@ -9,6 +9,6 @@ class SignUpForm(UserCreationForm):
 
 
 class FlagForm(forms.Form):
-    answer = forms.CharField()
+    answer = forms.CharField(required=False)
     q_id = forms.IntegerField(widget=forms.HiddenInput)
 
