@@ -151,13 +151,13 @@ def logout_then_login(request):
 
 def is_EventPeriod(start, end):
     current_DateTime = datetime.datetime.now()
-    end_DateTime = datetime.datetime(2016, 3, 30, 20)
+    end_DateTime = end
     if start is None:
         if current_DateTime <= end_DateTime:
             return True
         return False
 
-    start_DateTime = datetime.datetime(2016, 3, 30, 17)
+    start_DateTime = start
     if start_DateTime <= current_DateTime <= end_DateTime:
         return True
     return False
