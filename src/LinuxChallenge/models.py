@@ -24,7 +24,7 @@ class User(AbstractUser):
             try:
                 last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().time
             except Answer.DoesNotExist:
-                last_time = self.last_login
+                last_time = self.date_joined
         return last_time
 
 

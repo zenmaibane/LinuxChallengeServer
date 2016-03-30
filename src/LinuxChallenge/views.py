@@ -25,7 +25,7 @@ class RankingView(ListView):
     template_name = 'ranking.html'
 
     def get_queryset(self):
-        queryset = sorted(User.objects.all(), key=lambda user: (-user.points, user.last_correct_answer_time))
+        queryset = sorted(User.objects.exclude(is_staff=True), key=lambda user: (-user.points, user.last_correct_answer_time))
         return queryset
 
 
@@ -55,6 +55,7 @@ class ChallengeView(View):
                       dictionary={"questions_per_lev": questions_per_level},
                       context_instance=RequestContext(request))
 
+
 class AccountCreateView(CreateView):
     model = User
     form_class = SignUpForm
@@ -64,7 +65,7 @@ class AccountCreateView(CreateView):
         return reverse("Index")
 
     def post(self, request, *args, **kwargs):
-        if is_EventPeriod():
+        if is_EventPeriod(None, datetime.datetime(2016, 3, 30, 20)):
             self.object = None
             return super(BaseCreateView, self).post(request, *args, **kwargs)
         else:
@@ -104,7 +105,7 @@ class AnswerView(View):
             question = Question.objects.get(id=q_id)
             user_answer = form.cleaned_data['answer']
             question_page = "/questions/" + str(q_id)
-            if is_EventPeriod():
+            if is_EventPeriod(datetime.datetime(2016, 3, 30, 12), datetime.datetime(2016, 3, 30, 20)):
                 try:
                     flag = Flag.objects.get(question=question, correct_answer__exact=user_answer)
                 except Flag.DoesNotExist:
@@ -147,10 +148,16 @@ def login(request):
 def logout_then_login(request):
     return views.logout_then_login(request=request, next_page="index")
 
-def is_EventPeriod():
+
+def is_EventPeriod(start, end):
     current_DateTime = datetime.datetime.now()
-    start_DateTime = datetime.datetime(2016, 3, 30, 17)
-    end_DateTime = datetime.datetime(2016, 3, 30, 20)
+    end_DateTime = end
+    if start is None:
+        if current_DateTime <= end_DateTime:
+            return True
+        return False
+
+    start_DateTime = start
     if start_DateTime <= current_DateTime <= end_DateTime:
         return True
     return False
