@@ -25,52 +25,42 @@ class RankingView(ListView):
     template_name = 'ranking.html'
 
     def get_queryset(self):
-        queryset = sorted(User.objects.exclude(is_staff=True), key=lambda user: (-user.points, user.last_correct_answer_time))
+        queryset = sorted(User.objects.exclude(is_staff=True),
+                          key=lambda user: (-user.points, user.last_correct_answer_time))
         return queryset
 
 
-class ChallengeView(View):
-    def get(self, request):
-        user = request.user
-        questions_per_level = []
-        l = Level.objects.all()
-        for lev in l:
-            if user.points >= lev.stage_limit_point:
-                questions = Question.objects.filter(level__stage=lev.stage)
-                questions_array = []
-                for question in questions:
-                    questions_array.append(question)
-                    get_points = 0
-                    for flag in question.flag_set.all():
-                        try:
-                            answer = Answer.objects.get(user=user, flag=flag)
-                            get_points += answer.flag.point
-                        except Answer.DoesNotExist:
-                            pass
-                    questions_array.append({"q": question, "get_points": get_points})
-                questions_per_level.append({"levels": lev, "questions": questions_array})
-            else:
-                break
-        return render(request=request, template_name="challenge.html",
-                      dictionary={"questions_per_lev": questions_per_level},
-                      context_instance=RequestContext(request))
+class QuestionsView(ListView):
+    queryset = Question.objects.all()
+    template_name = 'question_list.html'
 
+    def get_context_data(self, **kwargs):
+        # [{
+        #   level: level,
+        #   questions: [{
+        #           question: Question,
+        #           scored_points: int
+        #   }]
+        # }]
 
-class AccountCreateView(CreateView):
-    model = User
-    form_class = SignUpForm
-    template_name = "signup.html"
+        # FIXME: need human readable code
+        kwargs["objects"] = [{
+                                 "level": level,
+                                 "questions": [
+                                     {
+                                         "question": question,
+                                         "scored_points": sum([answer.flag.point
+                                                               for answer in filter(lambda answer: answer.is_correct,
+                                                                                    Answer.objects.filter(
+                                                                                        question=question)
+                                                                                    )
+                                                               ])
+                                     }
+                                     for question in Question.objects.filter(level=level)
+                                     ]
+                             } for level in Level.objects.all()]
 
-    def get_success_url(self):
-        return reverse("Index")
-
-    def post(self, request, *args, **kwargs):
-        if is_EventPeriod(None, datetime.datetime(2016, 3, 30, 20)):
-            self.object = None
-            return super(BaseCreateView, self).post(request, *args, **kwargs)
-        else:
-            error(request, "Sorry! Outside of service hours.")
-            return redirect(to=reverse("signup"))
+        return super(QuestionsView, self).get_context_data(**kwargs)
 
 
 class QuestionDetailView(DetailView):
@@ -94,6 +84,23 @@ class QuestionDetailView(DetailView):
                                       context_instance=RequestContext(request))
         else:
             return redirect(reverse("challenge"))
+
+
+class AccountCreateView(CreateView):
+    model = User
+    form_class = SignUpForm
+    template_name = "signup.html"
+
+    def get_success_url(self):
+        return reverse("Index")
+
+    def post(self, request, *args, **kwargs):
+        if is_EventPeriod(None, datetime.datetime(2016, 3, 30, 20)):
+            self.object = None
+            return super(BaseCreateView, self).post(request, *args, **kwargs)
+        else:
+            error(request, "Sorry! Outside of service hours.")
+            return redirect(to=reverse("signup"))
 
 
 class AnswerView(View):
@@ -142,7 +149,7 @@ class NoticeView(ListView):
 
 
 def login(request):
-    return views.login(request=request, template_name='index.html', redirect_field_name='challenge.html')
+    return views.login(request=request, template_name='index.html', redirect_field_name='question_list.html')
 
 
 def logout_then_login(request):
@@ -150,6 +157,7 @@ def logout_then_login(request):
 
 
 def is_EventPeriod(start, end):
+    return True
     current_DateTime = datetime.datetime.now()
     end_DateTime = end
     if start is None:

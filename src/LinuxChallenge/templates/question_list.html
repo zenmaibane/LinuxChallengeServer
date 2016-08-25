@@ -1,9 +1,9 @@
 {% extends "base_login_required.html" %}
 
 {% block contents %}
-  {% for ques_per_lev in questions_per_lev %}
+  {% for level_questions in objects %}
     <section class="card">
-      <h1>Level.{{ ques_per_lev.levels.stage }}</h1>
+      <h1>Level.{{ level_questions.level.stage }}</h1>
       <table class="pure-table nmkn-table">
         <thead>
          <tr>
@@ -11,19 +11,19 @@
             <th class="title">Title</th>
             <th class="points">Points</th>
             <th class="answer-points">Points you got</th>
-            <th class="compleate">Compleate?</th>
+            <th class="complete">Complete?</th>
          </tr>
         </thead>
         <tbody>
-          {% for question in ques_per_lev.questions %}
-            {% if not question.q.id == None %}
+          {% for objects in level_questions.questions %}
+            {% if not objects.question.id == None %}
               <tr>
-                <td>{{ question.q.id }}</td>
-                <td><a href="{%url 'question' question.q.id %}">{{ question.q.title }}</a></td>
-                <td>{{ question.q.points }}</td>
-                <td>{{ question.get_points }}</td>
+                <td>{{ objects.question.id }}</td>
+                <td><a href="{%url 'question' objects.question.id %}">{{ objects.question.title }}</a></td>
+                <td>{{ objects.question.points }}</td>
+                <td>{{ objects.scored_points }}</td>
                 <td style="text-align:center;">
-                  {% if question.q.points == question.get_points %}
+                  {% if objects.question.points == objects.question.scored_points %}
                     <i class="fi-crown good"></i>
                   {% else %}
                     <i class="fi-x bad"></i>
