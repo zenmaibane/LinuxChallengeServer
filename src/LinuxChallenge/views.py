@@ -35,9 +35,10 @@ class QuestionsView(ListView):
     template_name = 'question_list.html'
 
     def get_context_data(self, **kwargs):
-        # [{
+        # <data structure>
+        # objects = [{
         #   level: level,
-        #   questions: [{
+        #   questions: level_questions=[{
         #           question: Question,
         #           scored_points: int
         #   }]
