@@ -1,16 +1,16 @@
-import pprint
+import datetime
+from pprint import pprint
 
 from django.contrib.auth import views
+from django.contrib.messages import error, success
 from django.core.urlresolvers import reverse
+from django.shortcuts import render_to_response, redirect
+from django.template import RequestContext
 from django.views.generic import View, CreateView, DetailView, ListView
 from django.views.generic.edit import BaseCreateView
 
-from LinuxChallenge.models import User, Question, Flag, Level, Answer, Notice
 from LinuxChallenge.forms import SignUpForm, FlagForm
-from django.shortcuts import render, render_to_response, redirect
-from django.contrib.messages import error, success
-from django.template import RequestContext
-import datetime
+from LinuxChallenge.models import User, Question, Flag, Level, Answer, Notice
 
 
 class IndexView(View):
@@ -43,22 +43,28 @@ class QuestionsView(ListView):
         #   }]
         # }]
 
-        # FIXME: need human readable code
-        kwargs["objects"] = [{
-                                 "level": level,
-                                 "questions": [
-                                     {
-                                         "question": question,
-                                         "scored_points": sum([answer.flag.point
-                                                               for answer in filter(lambda answer: answer.is_correct,
-                                                                                    Answer.objects.filter(
-                                                                                        question=question)
-                                                                                    )
-                                                               ])
-                                     }
-                                     for question in Question.objects.filter(level=level)
-                                     ]
-                             } for level in Level.objects.all()]
+        objects = list()
+
+        # only answerable levels
+        for level in Level.objects.filter(stage_limit_point__gte=self.request.user.points):
+            level_questions = list()
+            for question in Question.objects.filter(level=level):
+                answers = Answer.objects.filter(question=question)
+                correct_answers = filter(lambda answer: answer.is_correct, answers)
+                obj = {
+                    "question": question,
+                    "scored_points": sum([ans.flag.point for ans in correct_answers])
+                }
+                level_questions.append(obj)
+
+            obj = {
+                "level": level,
+                "questions": level_questions
+            }
+
+            objects.append(obj)
+
+        kwargs["objects"] = objects
 
         return super(QuestionsView, self).get_context_data(**kwargs)
 

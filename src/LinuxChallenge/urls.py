@@ -19,7 +19,7 @@ from django.contrib.auth import views as auth_view
 from django.contrib.auth.decorators import login_required
 
 from LinuxChallenge import views
-from LinuxChallenge.views import IndexView, ChallengeView, RankingView, AccountCreateView, QuestionDetailView, AnswerView, NoticeView, \
+from LinuxChallenge.views import IndexView,  RankingView, AccountCreateView, QuestionDetailView, AnswerView, NoticeView, \
     QuestionsView
 
 urlpatterns = [
