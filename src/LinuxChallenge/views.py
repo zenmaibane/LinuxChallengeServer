@@ -9,7 +9,7 @@ from django.template import RequestContext
 from django.views.generic import View, CreateView, DetailView, ListView
 from django.views.generic.edit import BaseCreateView
 
-from LinuxChallenge.forms import SignUpForm, FlagForm
+from LinuxChallenge.forms import SignUpForm, FlagForm, AnswerForm
 from LinuxChallenge.models import User, Question, Flag, Level, Answer, Notice
 
 
@@ -32,7 +32,7 @@ class RankingView(ListView):
 
 class QuestionsView(ListView):
     queryset = Question.objects.all()
-    template_name = 'question_list.html'
+    template_name = 'question/list.html'
 
     def get_context_data(self, **kwargs):
         # <data structure>
@@ -47,7 +47,7 @@ class QuestionsView(ListView):
         objects = list()
 
         # only answerable levels
-        for level in Level.objects.filter(stage_limit_point__gte=self.request.user.points):
+        for level in Level.objects.filter(stage_limit_point__lte=self.request.user.points):
             level_questions = list()
             for question in Question.objects.filter(level=level):
                 answers = Answer.objects.filter(question=question)
@@ -72,25 +72,35 @@ class QuestionsView(ListView):
 
 class QuestionDetailView(DetailView):
     model = Question
+    template_name = "question/detail.html"
+    queryset = Question.objects.all()
 
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        self.object = self.get_object()
-        is_clear = None
-        for f in self.object.flag_set.all():
-            try:
-                answer = Answer.objects.get(user=user, flag=f)
-                is_clear = True
-            except Answer.DoesNotExist:
-                is_clear = False
-                break
-        if user.points >= self.object.level.stage_limit_point:
-            form = FlagForm(initial={"q_id": self.object.id})
-            return render_to_response(template_name='question.html',
-                                      dictionary={"form": form, "question": self.object, "is_clear": is_clear},
-                                      context_instance=RequestContext(request))
-        else:
-            return redirect(reverse("challenge"))
+    def get_queryset(self):
+        queryset = self.queryset
+
+        # only answerable level's questions
+        exclude_levels = Level.objects.exclude(stage_limit_point__lt=self.request.user.points)
+
+        for level in exclude_levels:
+            queryset = queryset.exclude(level=level)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(QuestionDetailView, self).get_context_data(**kwargs)
+        key = self.get_context_object_name(self.object)
+        question = self.object
+        answers = Answer.objects.filter(user=self.request.user).filter(question=question)
+        question_correct_answer_points = sum(
+            [a.flag.point for a in filter(lambda x: x.is_correct, answers)])
+        obj = {
+            "question": self.object,
+            "is_correct": self.object.points == question_correct_answer_points
+        }
+        kwargs["object"] = obj
+        if key:
+            kwargs[key] = obj
+        return kwargs
 
 
 class AccountCreateView(CreateView):
@@ -156,7 +166,7 @@ class NoticeView(ListView):
 
 
 def login(request):
-    return views.login(request=request, template_name='index.html', redirect_field_name='question_list.html')
+    return views.login(request=request, template_name='index.html', redirect_field_name='list.html')
 
 
 def logout_then_login(request):
