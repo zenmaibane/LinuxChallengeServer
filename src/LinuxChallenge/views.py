@@ -8,7 +8,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, CreateView, DetailView, ListView
 from django.views.generic.edit import BaseCreateView
 
-from LinuxChallenge.forms import SignUpForm, FlagForm, AnswerForm
+from LinuxChallenge.forms import SignUpForm, AnswerForm
 from LinuxChallenge.models import User, Question, Flag, Level, Answer, Notice
 
 
@@ -88,9 +88,8 @@ class QuestionView(DetailView):
         kwargs = super(QuestionView, self).get_context_data(**kwargs)
         key = self.get_context_object_name(self.object)
         question = self.object
-        answers = Answer.objects.filter(user=self.request.user).filter(question=question)
-        question_correct_answer_points = sum(
-            [a.flag.point for a in filter(lambda x: x.is_correct, answers)])
+        answers = Answer.objects.filter(user=self.request.user, question=question).exclude(flag=None)
+        question_correct_answer_points = sum([a.flag.point for a in answers])
         obj = {
             "question": self.object,
             "is_clear": self.object.points == question_correct_answer_points,
@@ -100,7 +99,6 @@ class QuestionView(DetailView):
         if key:
             kwargs[key] = obj
 
-        pprint(kwargs)
         return kwargs
 
 
