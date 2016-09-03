@@ -13,10 +13,10 @@
       </div>
     {% endfor %}
     {% if not object.is_clear %}
-      <form method="post" action="{%url 'answer' %}" class="pure-form">
+      <form method="post" action="{%url 'answer' object.question.id %}" class="pure-form">
         <fieldset>
           {% csrf_token %}
-          {{ form.as_p }}
+          {{ object.form.as_p }}
           <button class="pure-button pure-button-primary" type="submit">Submit</button>
         </fieldset>
       </form>

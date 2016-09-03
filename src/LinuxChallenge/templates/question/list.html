@@ -23,7 +23,7 @@
                 <td>{{ objects.question.points }}</td>
                 <td>{{ objects.scored_points }}</td>
                 <td style="text-align:center;">
-                  {% if objects.question.points == objects.question.scored_points %}
+                  {% if objects.question.points == objects.scored_points %}
                     <i class="fi-crown good"></i>
                   {% else %}
                     <i class="fi-x bad"></i>

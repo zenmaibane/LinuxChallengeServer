@@ -18,21 +18,19 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_view
 from django.contrib.auth.decorators import login_required
 
-from LinuxChallenge import views
-from LinuxChallenge.views import IndexView,  RankingView, AccountCreateView, QuestionDetailView, AnswerView, NoticeView, \
-    QuestionsView
+from LinuxChallenge.views import IndexView, RankingView, AccountCreateView, QuestionView, AnswerView, NoticeView, \
+    QuestionsView, login
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', IndexView.as_view(), name="Index"),
-    url(r'^login/', views.login, name="login"),
+    url(r'^login/', login, name="login"),
     url(r'^logout/', auth_view.logout_then_login, name="logout"),
     url(r'^ranking/', login_required(RankingView.as_view()), name='ranking'),
     url(r'^signup/', AccountCreateView.as_view(), name='signup'),
-    url(r'^challenge/', login_required(QuestionsView.as_view()), name='challenge'),
+    url(r'^questions/$', login_required(QuestionsView.as_view()), name='questions'),
+    url(r'^questions/(?P<pk>\d+)$', login_required(QuestionView.as_view()), name="question"),
+    url(r'^questions/(?P<pk>\d+)/answer$', login_required(AnswerView.as_view()), name="answer"),
     url(r'^notice/', NoticeView.as_view(), name='notice'),
-    url(r'^questions/(?P<pk>\d+)$', login_required(QuestionDetailView.as_view()), name="question"),
-    url(r'^answer/', login_required(AnswerView.as_view()), name='answer')
+    url(r'^answer/', login_required(AnswerView.as_view()), name='deprecated_answer')
 ]
-
-

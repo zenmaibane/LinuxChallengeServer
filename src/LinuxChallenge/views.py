@@ -4,8 +4,7 @@ from pprint import pprint
 from django.contrib.auth import views
 from django.contrib.messages import error, success
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
+from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, CreateView, DetailView, ListView
 from django.views.generic.edit import BaseCreateView
 
@@ -17,7 +16,7 @@ class IndexView(View):
     def get(self, request, *args, **kwargs):
         user = request.user
         if user.is_authenticated():
-            return redirect(reverse("challenge"))
+            return redirect(reverse("questions"))
         return redirect(reverse("login"))
 
 
@@ -70,7 +69,7 @@ class QuestionsView(ListView):
         return super(QuestionsView, self).get_context_data(**kwargs)
 
 
-class QuestionDetailView(DetailView):
+class QuestionView(DetailView):
     model = Question
     template_name = "question/detail.html"
     queryset = Question.objects.all()
@@ -79,15 +78,14 @@ class QuestionDetailView(DetailView):
         queryset = self.queryset
 
         # only answerable level's questions
-        exclude_levels = Level.objects.exclude(stage_limit_point__lt=self.request.user.points)
+        exclude_levels = Level.objects.filter(stage_limit_point__gt=self.request.user.points)
 
         for level in exclude_levels:
             queryset = queryset.exclude(level=level)
-
         return queryset
 
     def get_context_data(self, **kwargs):
-        kwargs = super(QuestionDetailView, self).get_context_data(**kwargs)
+        kwargs = super(QuestionView, self).get_context_data(**kwargs)
         key = self.get_context_object_name(self.object)
         question = self.object
         answers = Answer.objects.filter(user=self.request.user).filter(question=question)
@@ -95,7 +93,8 @@ class QuestionDetailView(DetailView):
             [a.flag.point for a in filter(lambda x: x.is_correct, answers)])
         obj = {
             "question": self.object,
-            "is_correct": self.object.points == question_correct_answer_points
+            "is_correct": self.object.points == question_correct_answer_points,
+            "form": AnswerForm()
         }
         kwargs["object"] = obj
         if key:
@@ -120,44 +119,31 @@ class AccountCreateView(CreateView):
             return redirect(to=reverse("signup"))
 
 
-class AnswerView(View):
-    def post(self, request):
-        form = FlagForm(request.POST)
-        if form.is_valid():
-            user = request.user
-            q_id = form.cleaned_data['q_id']
-            question = Question.objects.get(id=q_id)
-            user_answer = form.cleaned_data['answer']
-            question_page = "/questions/" + str(q_id)
-            if is_EventPeriod(datetime.datetime(2016, 3, 30, 12), datetime.datetime(2016, 3, 30, 20)):
-                try:
-                    flag = Flag.objects.get(question=question, correct_answer__exact=user_answer)
-                except Flag.DoesNotExist:
-                    answer = Answer(user=user, question=question, user_answer=user_answer, flag=None,
-                                    time=datetime.datetime.now())
-                    answer.save()
-                    error(request, "That's incorrect.")
-                    return redirect(question_page)
-                # 回答の重複処理
-                if flag and Answer.objects.filter(user=user, question=question, flag=flag).exists():
-                    error(request, "The flag is already submitted.")
-                    return redirect(question_page)
-                success(request, "Correct! You got " + str(flag.point) + " points !!!")
-                answer = Answer(user=user, question=question, user_answer=user_answer, flag=flag,
-                                time=datetime.datetime.now())
-                answer.save()
-                return redirect(question_page)
-            else:
-                error(request, "Sorry! Outside of service hours.")
-                return redirect(question_page)
+class AnswerView(CreateView):
+    model = Answer
+    form_class = AnswerForm
 
-        return self.get(request=request)
+    def get_success_url(self):
+        return reverse("question", kwargs={"pk": self.kwargs["pk"]})
+
+    def form_valid(self, form):
+        form.instance.question = get_object_or_404(Question, id=self.kwargs["pk"])
+        form.instance.user = self.request.user
+        try:
+            flag = Flag.objects.get(correct_answer=form.cleaned_data["user_answer"])
+            form.instance.flag = flag
+            success(self.request, "Congrats, You got %d pt." % flag.point)
+        except Flag.DoesNotExist:
+            error(self.request, "Oops, incorrect...")
+            pass
+
+        return super(AnswerView, self).form_valid(form)
 
     def get(self, request, *args, **kwargs):
-        ref_page = request.META.get('HTTP_REFERER', None)
-        if ref_page is None:
-            return redirect(reverse("challenge"))
-        return ref_page
+        return redirect(reverse('question', kwargs={"pk": self.kwargs["pk"]}))
+
+    def form_invalid(self, form):
+        return redirect(reverse('question', kwargs={"pk": self.kwargs["pk"]}))
 
 
 class NoticeView(ListView):
