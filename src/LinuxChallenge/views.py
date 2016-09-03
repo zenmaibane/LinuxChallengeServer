@@ -93,12 +93,14 @@ class QuestionView(DetailView):
             [a.flag.point for a in filter(lambda x: x.is_correct, answers)])
         obj = {
             "question": self.object,
-            "is_correct": self.object.points == question_correct_answer_points,
+            "is_clear": self.object.points == question_correct_answer_points,
             "form": AnswerForm()
         }
         kwargs["object"] = obj
         if key:
             kwargs[key] = obj
+
+        pprint(kwargs)
         return kwargs
 
 
