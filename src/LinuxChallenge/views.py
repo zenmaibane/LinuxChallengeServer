@@ -6,7 +6,7 @@ from django.contrib.messages import error, success
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, CreateView, DetailView, ListView
-from django.views.generic.edit import BaseCreateView
+from django.views.generic.edit import BaseCreateView, FormMixin
 
 from LinuxChallenge.forms import SignUpForm, AnswerForm
 from LinuxChallenge.models import User, Question, Flag, Level, Answer, Notice
@@ -69,10 +69,11 @@ class QuestionsView(ListView):
         return super(QuestionsView, self).get_context_data(**kwargs)
 
 
-class QuestionView(DetailView):
+class QuestionView(FormMixin, DetailView):
     model = Question
     template_name = "question/detail.html"
     queryset = Question.objects.all()
+    form_class = AnswerForm
 
     def get_queryset(self):
         queryset = self.queryset
@@ -93,7 +94,6 @@ class QuestionView(DetailView):
         obj = {
             "question": self.object,
             "is_clear": self.object.points == question_correct_answer_points,
-            "form": AnswerForm()
         }
         kwargs["object"] = obj
         if key:
@@ -130,7 +130,7 @@ class AnswerView(CreateView):
         form.instance.question = get_object_or_404(Question, id=self.kwargs["pk"])
         form.instance.user = self.request.user
         try:
-            flag = Flag.objects.get(correct_answer=form.cleaned_data["user_answer"])
+            flag = Flag.objects.get(question=form.instance.question, correct_answer=form.cleaned_data["user_answer"])
             form.instance.flag = flag
             success(self.request, "Congrats, You got %d pt." % flag.point)
         except Flag.DoesNotExist:

@@ -16,7 +16,7 @@
       <form method="post" action="{%url 'answer' object.question.id %}" class="pure-form">
         <fieldset>
           {% csrf_token %}
-          {{ object.form.as_p }}
+          {{ form.as_p }}
           <button class="pure-button pure-button-primary" type="submit">Submit</button>
         </fieldset>
       </form>

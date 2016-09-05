@@ -75,6 +75,7 @@ class Answer(models.Model):
     class Meta:
         ordering = ['scored_time']
         get_latest_by = 'scored_time'
+        unique_together = (('user', 'flag'), )
 
     def __str__(self):
         return self.user_answer
