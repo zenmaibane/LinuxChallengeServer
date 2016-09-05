@@ -129,13 +129,19 @@ class AnswerView(CreateView):
     def form_valid(self, form):
         form.instance.question = get_object_or_404(Question, id=self.kwargs["pk"])
         form.instance.user = self.request.user
+
         try:
             flag = Flag.objects.get(question=form.instance.question, correct_answer=form.cleaned_data["user_answer"])
             form.instance.flag = flag
-            success(self.request, "Congrats, You got %d pt." % flag.point)
         except Flag.DoesNotExist:
             error(self.request, "Oops, incorrect...")
             pass
+
+        if Answer.objects.filter(question=form.instance.question, flag=form.instance.flag).exists():
+            error(self.request, "Duplicate answer, search any?")
+            return self.form_invalid(form)
+
+        success(self.request, "Congrats, You got %d pt." % form.instance.flag.point)
 
         return super(AnswerView, self).form_valid(form)
 
