@@ -137,11 +137,12 @@ class AnswerView(CreateView):
             error(self.request, "Oops, incorrect...")
             pass
 
-        if Answer.objects.filter(question=form.instance.question, flag=form.instance.flag).exists():
-            error(self.request, "Duplicate answer, search any?")
-            return self.form_invalid(form)
+        if form.instance.flag is not None:
+            if Answer.objects.filter(question=form.instance.question, flag=form.instance.flag).exists():
+                error(self.request, "Duplicate answer, search any?")
+                return self.form_invalid(form)
 
-        success(self.request, "Congrats, You got %d pt." % form.instance.flag.point)
+            success(self.request, "Congrats, You got %d pt." % form.instance.flag.point)
 
         return super(AnswerView, self).form_valid(form)
 
