@@ -1,13 +1,9 @@
-import datetime
-from pprint import pprint
-
-from django.contrib.auth import views
 from django.contrib.messages import error, success
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
+from django.views.generic import CreateView, DetailView, ListView
 from django.views.generic import RedirectView
-from django.views.generic import View, CreateView, DetailView, ListView
-from django.views.generic.edit import BaseCreateView, FormMixin
+from django.views.generic.edit import FormMixin
 
 from LinuxChallenge.forms import SignUpForm, AnswerForm
 from LinuxChallenge.models import User, Question, Flag, Level, Answer, Notice
@@ -50,7 +46,7 @@ class QuestionsView(ListView):
             level_questions = list()
             for question in Question.objects.filter(level=level):
                 answers = Answer.objects.filter(user=self.request.user, question=question)
-                correct_answers = filter(lambda answer: answer.is_correct, answers)
+                correct_answers = filter(lambda answer: answer.flag is not None, answers)
                 obj = {
                     "question": question,
                     "scored_points": sum([ans.flag.point for ans in correct_answers])

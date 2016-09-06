@@ -80,10 +80,6 @@ class Answer(models.Model):
     def __str__(self):
         return self.user_answer
 
-    @property
-    def is_correct(self):
-        return self.flag is not None
-
 
 class Notice(models.Model):
     title = models.CharField('タイトル', max_length=255)
