@@ -5,19 +5,18 @@ from django.contrib.auth import views
 from django.contrib.messages import error, success
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
+from django.views.generic import RedirectView
 from django.views.generic import View, CreateView, DetailView, ListView
 from django.views.generic.edit import BaseCreateView, FormMixin
 
 from LinuxChallenge.forms import SignUpForm, AnswerForm
 from LinuxChallenge.models import User, Question, Flag, Level, Answer, Notice
 
-
-class IndexView(View):
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        if user.is_authenticated():
-            return redirect(reverse("questions"))
-        return redirect(reverse("login"))
+class IndexView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        if self.request.user.is_authenticated():
+            return reverse('questions')
+        return reverse('login')
 
 
 class RankingView(ListView):
@@ -109,14 +108,6 @@ class AccountCreateView(CreateView):
 
     def get_success_url(self):
         return reverse("Index")
-
-    def post(self, request, *args, **kwargs):
-        if is_EventPeriod(None, datetime.datetime(2016, 3, 30, 20)):
-            self.object = None
-            return super(BaseCreateView, self).post(request, *args, **kwargs)
-        else:
-            error(request, "Sorry! Outside of service hours.")
-            return redirect(to=reverse("signup"))
 
 
 class AnswerView(CreateView):

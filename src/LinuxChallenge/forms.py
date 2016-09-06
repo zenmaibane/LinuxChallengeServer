@@ -9,14 +9,6 @@ class SignUpForm(UserCreationForm):
         model = customUser
 
 
-class FlagForm(forms.Form):
-    answer = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'FLAG'}))
-    q_id = forms.IntegerField(widget=forms.HiddenInput)
-
-    class Meta:
-        fields = '__all__'
-
-
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
@@ -25,9 +17,3 @@ class AnswerForm(forms.ModelForm):
     def is_valid(self):
         # FIXME: Support time limits
         return super(AnswerForm, self).is_valid()
-
-    def clean(self):
-        # check the duplicate answer
-        return super(AnswerForm, self).clean()
-
-
