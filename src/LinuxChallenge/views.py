@@ -49,7 +49,7 @@ class QuestionsView(ListView):
         for level in Level.objects.filter(stage_limit_point__lte=self.request.user.points):
             level_questions = list()
             for question in Question.objects.filter(level=level):
-                answers = Answer.objects.filter(question=question)
+                answers = Answer.objects.filter(user=self.request.user, question=question)
                 correct_answers = filter(lambda answer: answer.is_correct, answers)
                 obj = {
                     "question": question,
