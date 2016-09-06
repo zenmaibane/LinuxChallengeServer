@@ -150,25 +150,3 @@ class NoticeView(ListView):
     template_name = "notice.html"
     model = Notice
 
-
-def login(request):
-    return views.login(request=request, template_name='index.html', redirect_field_name='list.html')
-
-
-def logout_then_login(request):
-    return views.logout_then_login(request=request, next_page="index")
-
-
-def is_EventPeriod(start, end):
-    return True
-    current_DateTime = datetime.datetime.now()
-    end_DateTime = end
-    if start is None:
-        if current_DateTime <= end_DateTime:
-            return True
-        return False
-
-    start_DateTime = start
-    if start_DateTime <= current_DateTime <= end_DateTime:
-        return True
-    return False
