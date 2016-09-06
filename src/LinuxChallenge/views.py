@@ -12,6 +12,7 @@ from django.views.generic.edit import BaseCreateView, FormMixin
 from LinuxChallenge.forms import SignUpForm, AnswerForm
 from LinuxChallenge.models import User, Question, Flag, Level, Answer, Notice
 
+
 class IndexView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         if self.request.user.is_authenticated():
@@ -129,7 +130,8 @@ class AnswerView(CreateView):
             pass
 
         if form.instance.flag is not None:
-            if Answer.objects.filter(question=form.instance.question, flag=form.instance.flag).exists():
+            if Answer.objects.filter(user=self.request.user, question=form.instance.question,
+                                     flag=form.instance.flag).exists():
                 error(self.request, "Duplicate answer, search any?")
                 return self.form_invalid(form)
 
