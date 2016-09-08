@@ -1,6 +1,5 @@
-import pprint
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.utils.timezone import now as timezone_now
 
 
@@ -17,7 +16,6 @@ class User(AbstractUser):
 
     @property
     def last_correct_answer_time(self):
-        pprint.pprint(self)
         try:
             last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().scored_time
         except Answer.DoesNotExist:
