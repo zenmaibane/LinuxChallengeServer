@@ -1,5 +1,5 @@
 from django.contrib.messages import error, success
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import CreateView, DetailView, ListView
 from django.views.generic import RedirectView
@@ -102,9 +102,7 @@ class AccountCreateView(CreateView):
     model = User
     form_class = SignUpForm
     template_name = "signup.html"
-
-    def get_success_url(self):
-        return reverse("Index")
+    success_url = reverse_lazy('index')
 
 
 class AnswerView(CreateView):
