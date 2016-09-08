@@ -46,7 +46,6 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-#    'django.middleware.csrfsite.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -136,7 +135,5 @@ STATICFILES_FINDERS = (
      'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-#LOGIN → REDIRECT_URL
-LOGIN_REDIRECT_URL = "/challenge/"
-
+LOGIN_REDIRECT_URL = '/questions/'
 LOGIN_URL = "/login/"

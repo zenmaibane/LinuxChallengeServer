@@ -33,6 +33,6 @@ admin.site.register(Notice, NoticeAdmin)
 
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'question', 'user_answer', 'flag', 'time')
-    list_display_links = ('user', 'question', 'user_answer', 'flag', 'time')
+    list_display = ('user', 'question', 'user_answer', 'flag', 'scored_time')
+    list_display_links = ('user', 'question', 'user_answer', 'flag', 'scored_time')
 admin.site.register(Answer, AnswerAdmin)
