@@ -24,7 +24,7 @@ from LinuxChallenge.views import IndexView, RankingView, AccountCreateView, Ques
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', IndexView.as_view(), name="Index"),
+    url(r'^$', IndexView.as_view(), name="index"),
     url(r'^login/', login, {'template_name': 'index.html'}, name="login"),
     url(r'^logout/', logout, {'next_page': reverse_lazy('login')}, name="logout"),
     url(r'^ranking/', login_required(RankingView.as_view()), name='ranking'),
