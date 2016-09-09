@@ -9,7 +9,7 @@
     </div>
     {% for message in messages %}
       <div class="message">
-        <p>{{ message }}</p>
+        <p>{{ message|linebreaks }}</p>
       </div>
     {% endfor %}
     {% if not object.is_clear %}
