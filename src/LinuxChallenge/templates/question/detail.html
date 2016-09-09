@@ -5,7 +5,7 @@
     <h1>Q{{ object.question.id }}. {{ object.question.title }}</h1>
     <hr>
     <div class="sentence">
-      {{ object.question.sentence }}
+      {{ object.question.sentence|linebreaks }}
     </div>
     {% for message in messages %}
       <div class="message">
