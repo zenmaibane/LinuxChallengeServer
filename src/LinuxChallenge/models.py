@@ -1,6 +1,5 @@
-import pprint
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.utils.timezone import now as timezone_now
 
 
@@ -17,12 +16,11 @@ class User(AbstractUser):
 
     @property
     def last_correct_answer_time(self):
-        pprint.pprint(self)
         try:
-            last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().time
+            last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().scored_time
         except Answer.DoesNotExist:
             try:
-                last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().time
+                last_time = Answer.objects.filter(user=self).exclude(flag=None).latest().scored_time
             except Answer.DoesNotExist:
                 last_time = self.date_joined
         return last_time
@@ -70,11 +68,12 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, verbose_name='問題')
     user_answer = models.CharField('解答', max_length=255)
     flag = models.ForeignKey('Flag', blank=True, null=True)
-    time = models.DateTimeField()
+    scored_time = models.DateTimeField("解答日時", blank=True, auto_now_add=True)
 
     class Meta:
-        ordering = ['time']
-        get_latest_by = 'time'
+        ordering = ['scored_time']
+        get_latest_by = 'scored_time'
+        unique_together = (('user', 'flag'), )
 
     def __str__(self):
         return self.user_answer

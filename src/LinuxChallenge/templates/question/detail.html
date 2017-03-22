@@ -2,18 +2,18 @@
 
 {% block contents %}
   <section class="card">
-    <h1>Q{{ question.id }}. {{ question.title }}</h1>
+    <h1>Q{{ object.question.id }}. {{ object.question.title }}</h1>
     <hr>
     <div class="sentence">
-      {{ question.sentence }}
+      {{ object.question.sentence|linebreaks }}
     </div>
     {% for message in messages %}
       <div class="message">
-        <p>{{ message }}</p>
+        <p>{{ message|linebreaks }}</p>
       </div>
     {% endfor %}
-    {% if not is_clear %}
-      <form method="post" action="{%url 'answer' %}" class="pure-form">
+    {% if not object.is_clear %}
+      <form method="post" action="{%url 'answer' object.question.id %}" class="pure-form">
         <fieldset>
           {% csrf_token %}
           {{ form.as_p }}

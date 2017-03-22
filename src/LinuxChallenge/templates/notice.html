@@ -5,7 +5,7 @@
     <section class="card">
       <h1>{{ notice.title }}</h1>
       <hr>
-      {{ notice.sentence }}
+      {{ notice.sentence|linebreaks }}
       <div class="notice-footer">
         {{ notice.published_time }}
       </div>

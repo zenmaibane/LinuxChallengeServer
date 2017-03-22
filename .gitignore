@@ -67,3 +67,7 @@ target/
 
 # Uploaded files
 src/question
+# for gunicorn, django debug toolbar
+src/static
+
+src/LinuxChallenge/migrations
